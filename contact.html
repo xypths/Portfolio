@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lisa Nagel – Kontakt</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0d0d0d;
+    --paper: #f5f0e8;
+    --accent: #c9a227;
+    --accent2: #2a5f8f;
+    --muted: #6b6459;
+    --line: #d4cec4;
+    --card: #faf7f2;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'DM Mono', monospace;
+    min-height: 100vh;
+  }
+
+  /* ── NAV ── */
+  .main-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    border-bottom: 2px solid var(--ink);
+    background: var(--card);
+    justify-content: center;
+  }
+  .main-nav a {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--muted);
+    padding: 1rem 1.4rem;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .main-nav a:hover { color: var(--ink); border-bottom-color: var(--accent); }
+  .main-nav a.active { color: var(--ink); border-bottom-color: var(--accent); }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 3rem 2.5rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.18;
+  }
+  .header-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.0;
+    position: relative;
+    z-index: 1;
+  }
+  header h1 em { color: var(--accent); font-style: italic; }
+  header p {
+    font-size: 0.75rem;
+    color: #aaa;
+    max-width: 480px;
+    line-height: 1.7;
+    margin-top: 1rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .status-bar {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.2rem;
+    font-size: 0.65rem;
+    color: #666;
+    font-family: 'Syne', sans-serif;
+    letter-spacing: 0.08em;
+    position: relative;
+    z-index: 1;
+  }
+  .status-dot {
+    width: 7px; height: 7px;
+    background: #4ade80;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  /* ── MAIN ── */
+  main { max-width: 900px; margin: 0 auto; padding: 2.5rem 2rem; }
+
+  .section-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.2rem;
+    margin-top: 2.5rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid var(--ink);
+  }
+  .section-label:first-child { margin-top: 0; }
+
+  /* ── CONTACT REVEAL ── */
+  .contact-reveal {
+    border: 1.5px solid var(--line);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+  .contact-reveal-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.1rem 1.4rem;
+    background: var(--ink);
+    color: var(--paper);
+    cursor: pointer;
+    user-select: none;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .contact-reveal-toggle .chevron {
+    font-size: 0.9rem;
+    color: #888;
+    transition: transform 0.25s;
+  }
+  .contact-reveal.open .chevron { transform: rotate(180deg); }
+  .contact-reveal-body {
+    display: none;
+    border-top: 1.5px solid var(--line);
+  }
+  .contact-reveal.open .contact-reveal-body { display: block; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── CONTACT CARDS ── */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1.5px solid var(--line);
+    margin-bottom: 2rem;
+  }
+
+  .contact-card {
+    background: var(--card);
+    padding: 1.4rem;
+    text-decoration: none;
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    transition: background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .contact-card::after {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--accent);
+    transform: scaleY(0);
+    transition: transform 0.2s;
+  }
+  .contact-card:hover::after { transform: scaleY(1); }
+  .contact-card:hover { background: #f0ebe0; }
+
+  .cc-icon { font-size: 1.5rem; }
+  .cc-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .cc-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1rem;
+    line-height: 1.2;
+    word-break: break-all;
+  }
+  .cc-note {
+    font-size: 0.62rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .cc-arrow {
+    font-size: 0.75rem;
+    color: var(--accent);
+    margin-top: auto;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .contact-card:hover .cc-arrow { opacity: 1; }
+
+  /* ── INFO BOX ── */
+  .info-box {
+    border: 1.5px solid var(--line);
+    background: var(--card);
+    padding: 1.4rem;
+    margin-bottom: 2rem;
+    border-left: 3px solid var(--accent);
+  }
+  .info-box p {
+    font-size: 0.75rem;
+    line-height: 1.8;
+    color: #3a3530;
+  }
+  .info-box p strong { color: var(--ink); font-weight: 500; }
+  .info-box p em { color: var(--accent); font-style: italic; }
+
+  /* ── DETAILS TABLE ── */
+  .details-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.72rem;
+  }
+  .details-table tr {
+    border-bottom: 1px solid var(--line);
+  }
+  .details-table tr:last-child { border-bottom: none; }
+  .details-table td {
+    padding: 0.7rem 0.5rem;
+    vertical-align: top;
+  }
+  .details-table td:first-child {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    width: 140px;
+    padding-right: 1rem;
+    white-space: nowrap;
+  }
+  .details-table td:last-child {
+    color: var(--ink);
+    line-height: 1.5;
+  }
+
+  /* ── AVAILABILITY ── */
+  .avail-box {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 1.5rem;
+    border-radius: 2px;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+  }
+  .avail-dot {
+    width: 10px; height: 10px;
+    background: #4ade80;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+    flex-shrink: 0;
+  }
+  .avail-text { flex: 1; }
+  .avail-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.3rem;
+  }
+  .avail-sub {
+    font-size: 0.65rem;
+    color: #888;
+    line-height: 1.5;
+  }
+
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.62rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    border-top: 1px solid var(--line);
+    margin-top: 2rem;
+  }
+
+  @media (max-width: 600px) {
+    header { padding: 2rem 1.5rem; }
+    main { padding: 1.5rem 1rem; }
+    .contact-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="main-nav">
+  <a href="index.html">Über mich</a>
+  <a href="skills.html">Wissen & Kompetenzen</a>
+  <a href="certifikates.html">Zertifikate</a>
+  <a href="projects.html">Projekte & Essays</a>
+  <a href="contact.html" class="active">Kontakt</a>
+</nav>
+
+<header>
+  <div class="header-label">Kontakt & Erreichbarkeit</div>
+  <h1>Let's <em>talk.</em></h1>
+  <p>Ich bin offen für Einstiegsstellen & den Austausch<br>über die Brücke zwischen Mensch & Maschinen. .</p>
+  <div class="status-bar">
+    <span class="status-dot"></span>
+    Aktiv auf Jobsuche · Schweiz · Remote · Europa
+  </div>
+</header>
+
+<main>
+
+  <!-- ── VERFÜGBARKEIT ── -->
+  <div class="avail-box">
+    <span class="avail-dot"></span>
+    <div class="avail-text">
+      <div class="avail-title">Offen für neue Positionen</div>
+      <div class="avail-sub">IT-Einstiegspositionen · Analyse & Prozesse · Support</div>
+    </div>
+  </div>
+
+  <!-- ── KONTAKT ── -->
+  <div class="section-label">Direktkontakt</div>
+  <!-- Kontaktdetails aufklappbar -->
+  <div class="contact-reveal">
+    <div class="contact-reveal-toggle" onclick="this.parentElement.classList.toggle('open')">
+      <span>📬 Kontaktdetails anzeigen</span>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="contact-reveal-body">
+      <div class="contact-grid">
+        <a class="contact-card" href="mailto:nagel-lisa@gmx.ch">
+          <span class="cc-icon">✉️</span>
+          <span class="cc-label">E-Mail</span>
+          <span class="cc-value">nagel-lisa@gmx.ch</span>
+          <span class="cc-note">Bevorzugter Kontaktweg · Antwort in der Regel innerhalb 24h</span>
+          <span class="cc-arrow">→ E-Mail schreiben</span>
+        </a>
+        <a class="contact-card" href="tel:+41798969420">
+          <span class="cc-icon">📞</span>
+          <span class="cc-label">Telefon</span>
+          <span class="cc-value">+41 79 896 94 20</span>
+          <span class="cc-note">Mobil · Erreichbar Mo–Fr</span>
+          <span class="cc-arrow">→ Anrufen</span>
+        </a>
+        <a class="contact-card" href="https://github.com" target="_blank">
+          <span class="cc-icon">💻</span>
+          <span class="cc-label">GitHub</span>
+          <span class="cc-value">github.com / Lisa Nagel</span>
+          <span class="cc-note">Portfolio · NetAcad-Projekte · Essays</span>
+          <span class="cc-arrow">→ GitHub öffnen</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ÜBER DEN KONTAKT ── -->
+  <div class="section-label">Was ich suche</div>
+  <div class="info-box">
+    <p>Ich suche einen <strong>Einstieg im IT-Bereich</strong> — idealerweise in einem Unternehmen, das analytisches Denken, Eigenverantwortung und strukturiertes Vorgehen schätzt. Ob <em>IT-Support, Analyse, Systemadministration oder eine verwandte Position</em> — ich bringe Lernbereitschaft, technisches Grundwissen und über 10 Jahre Praxiserfahrung in verantwortungsvollen Positionen mit.</p>
+    <p style="margin-top: 0.8rem;">Besonders interessiere ich mich für Bereiche, wo <em>strukturiertes Problemlösen, Prozessdenken und Menschenkenntnis</em> zusammenkommen — ob im technischen Umfeld, in der Analyse oder im Schnittstellenbereich zwischen Menschen und Systemen.</p>
+  </div>
+
+  <!-- ── ECKDATEN ── -->
+  <div class="section-label">Eckdaten</div>
+  <table class="details-table">
+    <tr>
+      <td>Standort</td>
+      <td>Schweiz · Remote · Europa</td>
+    </tr>
+    <tr>
+      <td>Sprachen</td>
+      <td>Deutsch (Muttersprache) · Englisch B2–C1</td>
+    </tr>
+    <tr>
+      <td>Mobilität</td>
+      <td>Führerschein Kat. B · flexibel</td>
+    </tr>
+    <tr>
+      <td>Verfügbarkeit</td>
+      <td>Nach Vereinbarung</td>
+    </tr>
+    <tr>
+      <td>Arbeitsmodell</td>
+      <td>Offen für Remote, Hybrid oder vor Ort</td>
+    </tr>
+  </table>
+
+</main>
+
+<footer>Lisa Nagel · Kontakt · Stand Mai 2026 · nagel-lisa@gmx.ch</footer>
+
+</body>
+</html>

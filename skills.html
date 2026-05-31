@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wissensstruktur – Lisa Nagel</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0d0d0d;
+    --paper: #f5f0e8;
+    --accent: #c9a227;
+    --accent2: #2a5f8f;
+    --muted: #6b6459;
+    --line: #d4cec4;
+    --card: #faf7f2;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'DM Mono', monospace;
+    min-height: 100vh;
+    padding: 0;
+  }
+
+.main-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  border-bottom: 2px solid var(--ink);
+  background: var(--card);
+  justify-content: center;
+}
+
+.main-nav a {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--muted);
+  padding: 1rem 1.4rem;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.main-nav a:hover {
+  color: var(--ink);
+  border-bottom-color: var(--accent);
+}
+
+.main-nav a.active {
+  color: var(--ink);
+  border-bottom-color: var(--accent);
+}
+
+  header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 3rem 2.5rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.18;
+  }
+  header .label {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #aaa;
+    margin-bottom: 0.6rem;
+  }
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    line-height: 1.05;
+    margin-bottom: 0.5rem;
+  }
+  header h1 em {
+    color: var(--accent);
+    font-style: italic;
+  }
+  header p {
+    font-size: 0.78rem;
+    color: #bbb;
+    max-width: 520px;
+    line-height: 1.6;
+    margin-top: 0.8rem;
+  }
+
+  nav {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid var(--ink);
+    background: var(--card);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  nav::-webkit-scrollbar { display: none; }
+  nav button {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: none;
+    background: none;
+    padding: 1rem 1.4rem;
+    cursor: pointer;
+    color: var(--muted);
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  nav button.active {
+    color: var(--ink);
+    border-bottom-color: var(--accent);
+  }
+  nav button:hover { color: var(--ink); }
+
+  main { padding: 2rem 1.5rem; max-width: 900px; margin: 0 auto; }
+
+  .panel { display: none; }
+  .panel.active { display: block; animation: fadeIn 0.3s ease; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── KNOWLEDGE CARDS ── */
+  .domain {
+    margin-bottom: 2rem;
+    border: 1.5px solid var(--line);
+    background: var(--card);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .domain-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.2rem;
+    background: var(--ink);
+    color: var(--paper);
+    cursor: pointer;
+    user-select: none;
+  }
+  .domain-header .icon {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+  .domain-header .title-group { flex: 1; }
+  .domain-header h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .domain-header .subtitle {
+    font-size: 0.65rem;
+    color: #aaa;
+    margin-top: 0.15rem;
+    letter-spacing: 0.05em;
+  }
+  .domain-header .chevron {
+    font-size: 0.9rem;
+    transition: transform 0.25s;
+    color: #888;
+  }
+  .domain.open .chevron { transform: rotate(180deg); }
+
+  .domain-body {
+    display: none;
+    padding: 1.2rem;
+    border-top: 1.5px solid var(--line);
+  }
+  .domain.open .domain-body { display: block; }
+
+  .subdomain {
+    margin-bottom: 1.2rem;
+  }
+  .subdomain:last-child { margin-bottom: 0; }
+
+  .subdomain h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .skill-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .skill-tag {
+    font-size: 0.7rem;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 0.25rem 0.55rem;
+    color: var(--ink);
+    letter-spacing: 0.03em;
+  }
+  .skill-tag.cert {
+    border-color: var(--accent2);
+    color: var(--accent2);
+  }
+  .skill-tag.strong {
+    border-color: var(--accent);
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .source-note {
+    font-size: 0.62rem;
+    color: var(--muted);
+    margin-top: 0.6rem;
+    padding-top: 0.5rem;
+    border-top: 1px dashed var(--line);
+    font-style: italic;
+  }
+
+  /* ── BOOKS ── */
+  .book-card {
+    margin-bottom: 1.5rem;
+    border: 1.5px solid var(--line);
+    background: var(--card);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .book-header {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.9rem 1.1rem;
+    cursor: pointer;
+    user-select: none;
+  }
+  .book-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem;
+    color: var(--line);
+    font-style: italic;
+    line-height: 1;
+  }
+  .book-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+  .book-author {
+    font-size: 0.65rem;
+    color: var(--muted);
+    margin-top: 0.1rem;
+    font-family: 'DM Mono', monospace;
+  }
+  .book-domain-tag {
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.5rem;
+    border-radius: 2px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .tag-psych { background: #fde8e0; color: #c84b2f; }
+  .tag-mgmt  { background: #e0eaf5; color: #2a5f8f; }
+  .tag-fachrecht { background: #e8f0e8; color: #3a7a3a; }
+  .tag-med   { background: #f0e8f5; color: #7a3a9a; }
+  .tag-sport { background: #e8f5e8; color: #2a7a4a; }
+  .tag-konf  { background: #f5ede8; color: #8f5a2a; }
+
+  .book-body {
+    display: none;
+    padding: 0 1.1rem 1.1rem;
+  }
+  .book-card.open .book-body { display: block; }
+  .book-card.open .book-domain-tag { opacity: 0.6; }
+
+  .knowledge-structure {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+    margin-top: 0.5rem;
+  }
+  @media (max-width: 600px) {
+    .knowledge-structure { grid-template-columns: 1fr; }
+  }
+
+  .ks-block { border: 1px solid var(--line); padding: 0.7rem; border-radius: 2px; }
+  .ks-block .ks-label {
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.4rem;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+  }
+  .ks-block ul {
+    list-style: none;
+    padding: 0;
+  }
+  .ks-block ul li {
+    font-size: 0.7rem;
+    color: var(--ink);
+    padding: 0.15rem 0;
+    border-bottom: 1px dashed var(--line);
+    line-height: 1.4;
+  }
+  .ks-block ul li:last-child { border-bottom: none; }
+  .ks-block ul li::before {
+    content: '→ ';
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .book-divider {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 1.8rem 0 0.8rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .cert-strip {
+    background: var(--ink);
+    color: var(--paper);
+    font-size: 0.65rem;
+    padding: 0.5rem 1.2rem;
+    letter-spacing: 0.08em;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .cert-strip::before { content: '✓'; color: #6dda7f; font-weight: 700; }
+
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.62rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    border-top: 1px solid var(--line);
+    margin-top: 2rem;
+  }
+</style>
+</head>
+<body>
+
+<nav class="main-nav">
+    <a href="index.html">Über mich</a>
+    <a href="skills.html">Wissen & Kompetenzen</a>
+    <a href="certifikates.html">Zertifikate</a>
+    <a href="projects.html">Projekte & Essays</a>
+    <a href="contact.html">Kontakt</a>
+</nav>
+
+<header>
+  <p class="label">Wissensstruktur & Kompetenzprofil</p>
+  <h1>Lisa Nagel —<br><em>Kenntnisse & Lektüre</em></h1>
+  <p>Fachbereiche mit Unterdisziplinen · Zertifizierte Kompetenzen · Gelesene Bücher mit rekonstruierter Wissensstruktur</p>
+</header>
+
+<nav>
+  <button class="active" onclick="showPanel('kenntnisse', this)">Fachkenntnisse</button>
+  <button onclick="showPanel('buecher', this)">Bücher & Wissen</button>
+</nav>
+
+<main>
+
+<!-- ═══════════════════════════════ KENNTNISSE ═══════════════════════════════ -->
+<div id="kenntnisse" class="panel active">
+
+  <!-- 1. Cybersecurity -->
+  <div class="domain open">
+    <div class="domain-header" onclick="toggleDomain(this)">
+      <span class="icon">🔐</span>
+      <div class="title-group">
+        <h2>Cybersecurity</h2>
+        <div class="subtitle">Cisco NetAcad · laufend seit Aug 2025</div>
+      </div>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="domain-body">
+      <div class="subdomain">
+        <h3>Grundlagen & Konzepte</h3>
+        <div class="skill-grid">
+          <span class="skill-tag strong">Cyber Threats & Angriffsvektoren</span>
+          <span class="skill-tag">Schwachstellen-Analyse</span>
+          <span class="skill-tag">Online-Sicherheit</span>
+          <span class="skill-tag">Organisationsschutz</span>
+          <span class="skill-tag">Karrierewege Cybersecurity</span>
+        </div>
+      </div>
+      <div class="subdomain">
+        <h3>Netzwerktechnik</h3>
+        <div class="skill-grid">
+          <span class="skill-tag strong">Networking Basics</span>
+          <span class="skill-tag strong">Networking Devices & Initial Configuration</span>
+          <span class="skill-tag">Router & Switch-Konfiguration</span>
+          <span class="skill-tag">Netzwerkprotokolle</span>
+          <span class="skill-tag">IP-Adressierung</span>
+          <span class="skill-tag">OSI/TCP-IP Modell</span>
+        </div>
+      </div>
+      <div class="subdomain">
+        <h3>Endpoint Security</h3>
+        <div class="skill-grid">
+          <span class="skill-tag strong">Endpoint Protection</span>
+          <span class="skill-tag">Malware-Analyse (Grundlagen)</span>
+          <span class="skill-tag">Host-basierte Sicherheit</span>
+          <span class="skill-tag">Security Policies</span>
+        </div>
+      </div>
+      <div class="subdomain">
+        <h3>Laufend (Network Defense)</h3>
+        <div class="skill-grid">
+          <span class="skill-tag cert">Network Defense – in Ausbildung</span>
+          <span class="skill-tag cert">Junior Cybersecurity Analyst – in Ausbildung</span>
+        </div>
+      </div>
+      <div class="source-note">Zertifiziert: Introduction to Cybersecurity (Aug 2025) · Networking Basics (Nov 2025) · Networking Devices (Dez 2025) · Endpoint Security (Feb 2026)</div>
+    </div>
+  </div>
+
+  <!-- 2. IT & Programmierung -->
+  <div class="domain">
+    <div class="domain-header" onclick="toggleDomain(this)">
+      <span class="icon">💻</span>
+      <div class="title-group">
+        <h2>IT & Programmierung</h2>
+        <div class="subtitle">Autodidaktisch via MIMO · praktische Kenntnisse</div>
+      </div>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="domain-body">
+      <div class="subdomain">
+        <h3>Programmiersprachen</h3>
+        <div class="skill-grid">
+          <span class="skill-tag strong">Python</span>
+          <span class="skill-tag strong">SQL</span>
+          <span class="skill-tag">HTML/CSS</span>
+          <span class="skill-tag">JavaScript</span>
+        </div>
+      </div>
+      <div class="subdomain">
+        <h3>IT-Systeme & Tools</h3>
+        <div class="skill-grid">
+          <span class="skill-tag">ServiceNow</span>
+          <span class="skill-tag">MS Office (Word, Excel, Outlook)</span>
+          <span class="skill-tag">CRM-Systeme</span>
+          <span class="skill-tag">POS-Kassensystem</span>
+          <span class="skill-tag">TBC Controlling-Tool</span>
+        </div>
+      </div>
+      <div class="subdomain">
+        <h3>Wissensstruktur dahinter</h3>
+        <div class="skill-grid">
+          <span class="skill-tag">Datenbanklogik (SQL)</span>
+          <span class="skill-tag">Skriptlogik & Automatisierung (Python)</span>
+          <span class="skill-tag">Frontend-Grundlagen (HTML/CSS/JS)</span>
+          <span class="skill-tag">Systemadministration (NetAcad)</span>
+          <span class="skill-tag">Ticketing & ITSM (ServiceNow)</span>
+        </div>
+      </div>
+      <div class="source-note">Quelle: MIMO App 2022 · Cisco NetAcad ab 2025 · Praxiseinsatz Puregym AG</div>
+    </div>
+  </div>
+
+  <!-- 3. KI & Ethik -->
+  <div class="domain">
+    <div class="domain-header" onclick="toggleDomain(this)">
+      <span class="icon">🤖</span>
+      <div class="title-group">
+        <h2>Künstliche Intelligenz & Ethik</h2>
+        <div class="subtitle">University of Helsinki · Una Europa MOOC</div>
+      </div>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="domain-body">
+      <div class="subdomain">
+        <h3>AI Ethics (2 ECTS, zertifiziert)</h3>
+        <div class="skill-grid">
+          <span class="skill-tag strong">Grundlagen KI-Ethik</span>
+          <span class="skill-tag">Bias & Fairness</span>
+          <span class="skill-tag">Verantwortung & Transparenz</span>
+          <span class="skill-tag">Regulierung & Recht (AI Act)</span>
+        </div>
+      </div>
+      <div class="subdomain">
+        <h3>AI in Society MOOC (Una Europa)</h3>
+        <div class="skill-grid">
+          <span class="skill-tag cert">AI in Society: Introduction (Mai 2026)</span>
+          <span class="skill-tag cert">AI and Discrimination (Mai 2026)</span>
+          <span class="skill-tag cert">AI and Justice (Mai 2026)</span>
+        </div>
+      </div>
+      <div class="subdomain">
+        <h3>Wissensstruktur dahinter</h3>
+        <div class="skill-grid">
+          <span class="skill-tag">Gesellschaftliche KI-Auswirkungen</span>
+          <span class="skill-tag">Algorithmische Diskriminierung</span>
+          <span class="skill-tag">Rechtsphilosophie & KI</span>
+          <span class="skill-tag">Datenschutz & Persönlichkeitsrechte</span>
+        </div>
+      </div>
+      <div class="source-note">Zertifiziert: Ethics of AI – University of Helsinki (Mai 2026) · AI in Society: 3 Module – Una Europa/Helsinki/Edinburgh/Sorbonne (Mai 2026)</div>
+    </div>
+  </div>
+
+  <!-- 4. Versicherung & Recht -->
+  <div class="domain">
+    <div class="domain-header" onclick="toggleDomain(this)">
+      <span class="icon">⚖️</span>
+      <div class="title-group">
+        <h2>Versicherung & Recht</h2>
+        <div class="subtitle">Groupe Mutuel · VBV-Lektüre · Praxiserfahrung</div>
+      </div>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="domain-body">
+      <div class="subdomain">
+        <h3>Krankenversicherung (zertifiziert)</h3>
+        <div class="skill-grid">
+          <span class="skill-tag strong">KVG (Krankenversicherungsgesetz)</span>
+          <span class="skill-tag strong">OKP – Obligatorische Krankenpflegeversicherung</span>
+          <span class="skill-tag">Zusatzversicherungen (GMA SA)</span>
+          <span class="skill-tag">Vertragsbedingungen & Wartefristen</span>
+          <span class="skill-tag">Deckungsumfang-Analyse</span>
+        </div>
+      </div>
+      <div class="subdomain">
+        <h3>Rechtsgrundlagen (VBV-Lektüre)</h3>
+        <div class="skill-grid">
+          <span class="skill-tag">VVG (Versicherungsvertragsgesetz)</span>
+          <span class="skill-tag">VAG (Versicherungsaufsichtsgesetz)</span>
+          <span class="skill-tag">Sachversicherung</span>
+          <span class="skill-tag">Vermögensversicherung</span>
+          <span class="skill-tag">Personenversicherung</span>
+          <span class="skill-tag">Sozialversicherung</span>
+          <span class="skill-tag">Vermittlerrecht</span>
+          <span class="skill-tag">Versicherungswirtschaft</span>
+        </div>
+      </div>
+      <div class="subdomain">
+        <h3>Sicherheitsstandards (Praxis)</h3>
+        <div class="skill-grid">
+          <span class="skill-tag">ASAkompakt-Standards</span>
+          <span class="skill-tag">Interne Prozessvorgaben</span>
+          <span class="skill-tag">Compliance & Dokumentation</span>
+        </div>
+      </div>
+      <div class="source-note">Zertifiziert: Groupe Mutuel Krankenversicherung (Mai 2020) · Praxiserfahrung: Swiss Finanz Beratung AG 2020 · Puregym AG 2022–2023</div>
+    </div>
+  </div>
+
+  <!-- 5. Notfallmedizin & Rettungsdienst -->
+  <div class="domain">
+    <div class="domain-header" onclick="toggleDomain(this)">
+      <span class="icon">🚑</span>
+      <div class="title-group">
+        <h2>Notfallmedizin & Rettungsdienst</h2>
+        <div class="subtitle">Staatl. anerkannt · DRK Schwäbisch Hall/Aalen</div>
+      </div>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="domain-body">
+      <div class="subdomain">
+        <h3>Medizinische Fachkompetenz</h3>
+        <div class="skill-grid">
+          <span class="skill-tag strong">Notfallversorgung & Erstversorgung</span>
+          <span class="skill-tag">Krankentransport</span>
+          <span class="skill-tag">Vitalzeichenbeurteilung</span>
+          <span class="skill-tag">Notfallmedizin Grundlagen</span>
+          <span class="skill-tag">Patientenbeurteilung</span>
+        </div>
+      </div>
+      <div class="subdomain">
+        <h3>Dokumentation & Protokollierung</h3>
+        <div class="skill-grid">
+          <span class="skill-tag strong">NADOC-Protokoll</span>
+          <span class="skill-tag">Checkabläufe & Qualitätsstandards</span>
+          <span class="skill-tag">Lückenlose Einsatzdokumentation</span>
+        </div>
+      </div>
+      <div class="subdomain">
+        <h3>Entscheidungsfähigkeit & Soft Skills</h3>
+        <div class="skill-grid">
+          <span class="skill-tag">Eigenverantwortliche Entscheidungen</span>
+          <span class="skill-tag">Stressresistenz & Handlungsfähigkeit</span>
+          <span class="skill-tag">Teamarbeit im Notfalldienst</span>
+        </div>
+      </div>
+      <div class="source-note">Zertifiziert: Rettungssanitäterin – Akademie Diemed / DRK 2017 · 520 Stunden Ausbildung + Praxis 2015–2018</div>
+    </div>
+  </div>
+
+  <!-- 6. Sport & Fitness -->
+  <div class="domain">
+    <div class="domain-header" onclick="toggleDomain(this)">
+      <span class="icon">🏋️</span>
+      <div class="title-group">
+        <h2>Sport, Fitness & Gesundheit</h2>
+        <div class="subtitle">SAFS Diplom · 2+ Jahre Berufserfahrung</div>
+      </div>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="domain-body">
+      <div class="subdomain">
+        <h3>Sportwissenschaft (SAFS)</h3>
+        <div class="skill-grid">
+          <span class="skill-tag strong">Anatomie & Physiologie</span>
+          <span class="skill-tag">Biomechanik</span>
+          <span class="skill-tag">Sportmedizin Grundlagen</span>
+          <span class="skill-tag">Trainingslehre (Kraft, Ausdauer, Beweglichkeit)</span>
+          <span class="skill-tag">Programmgestaltung</span>
+        </div>
+      </div>
+      <div class="subdomain">
+        <h3>Training & Betreuung</h3>
+        <div class="skill-grid">
+          <span class="skill-tag">Individualprogramme</span>
+          <span class="skill-tag">Gesundheitsorientiertes Training</span>
+          <span class="skill-tag">Leistungsorientiertes Training</span>
+          <span class="skill-tag">Kundenberatung & Motivation</span>
+        </div>
+      </div>
+      <div class="subdomain">
+        <h3>Therapie & Prävention durch Sport – Bd. 1–4 (Elsevier)</h3>
+        <div class="skill-grid">
+          <span class="skill-tag">Grundlagen Sporttherapie</span>
+          <span class="skill-tag">Neurologie & Psychosomatik</span>
+          <span class="skill-tag">Schmerzsyndrome</span>
+          <span class="skill-tag">Orthopädie & Rheumatologie</span>
+          <span class="skill-tag">Innere Medizin & Pädiatrie</span>
+          <span class="skill-tag">Beratung bei Beschwerden & Einschränkungen</span>
+        </div>
+      </div>
+      <div class="source-note">Zertifiziert: SAFS Fachausweis Fitness Trainer/Kundenberater – Zürich, Jul 2023 (QUALITOP-anerkannt)</div>
+    </div>
+  </div>
+
+  <!-- 7. Kundenberatung & Kommunikation -->
+  <div class="domain">
+    <div class="domain-header" onclick="toggleDomain(this)">
+      <span class="icon">🤝</span>
+      <div class="title-group">
+        <h2>Kundenberatung & Kommunikation</h2>
+        <div class="subtitle">10+ Jahre Berufserfahrung</div>
+      </div>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="domain-body">
+      <div class="subdomain">
+        <h3>Beratung & Vertrieb</h3>
+        <div class="skill-grid">
+          <span class="skill-tag strong">Bedarfsanalyse</span>
+          <span class="skill-tag strong">Angebotsausarbeitung</span>
+          <span class="skill-tag">Kundenakquise (Aussendienst)</span>
+          <span class="skill-tag">Verkaufsgespräche</span>
+          <span class="skill-tag">Stammkundenbetreuung</span>
+        </div>
+      </div>
+      <div class="subdomain">
+        <h3>Konfliktmanagement (Lektüre)</h3>
+        <div class="skill-grid">
+          <span class="skill-tag">Mediation Grundlagen</span>
+          <span class="skill-tag">Deeskalationstechniken</span>
+          <span class="skill-tag">Verhandlungsführung</span>
+          <span class="skill-tag">Kommunikationspsychologie</span>
+        </div>
+      </div>
+      <div class="subdomain">
+        <h3>Qualitätssicherung</h3>
+        <div class="skill-grid">
+          <span class="skill-tag">Mystery Shopping (Methodenkompetenz)</span>
+          <span class="skill-tag">Servicebeurteilung & Dokumentation</span>
+          <span class="skill-tag">Prozessoptimierung</span>
+        </div>
+      </div>
+      <div class="source-note">Praxiserfahrung: Swiss Finanz 2020 · Puregym 2022–23 · Movemi/Activ Fitness 2023–25 · Mysteryshopper 2022</div>
+    </div>
+  </div>
+
+  <!-- 7b. Management & Entscheidung -->
+  <div class="domain">
+    <div class="domain-header" onclick="toggleDomain(this)">
+      <span class="icon">🧠</span>
+      <div class="title-group">
+        <h2>Management & Entscheidung</h2>
+        <div class="subtitle">Management Anthology Reloaded · Operative Praxis</div>
+      </div>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="domain-body">
+      <div class="subdomain">
+        <h3>Denkmodelle & Methoden (Lektüre)</h3>
+        <div class="skill-grid">
+          <span class="skill-tag strong">44 Denkmodelle für Entscheider</span>
+          <span class="skill-tag">Systemisches Denken</span>
+          <span class="skill-tag">Entscheidungsfindung unter Unsicherheit</span>
+          <span class="skill-tag">Mentale Modelle & Heuristiken</span>
+        </div>
+      </div>
+      <div class="subdomain">
+        <h3>Führung & Organisation (Praxis)</h3>
+        <div class="skill-grid">
+          <span class="skill-tag">Eigenverantwortliches Arbeiten</span>
+          <span class="skill-tag">Onboarding & Einarbeitung</span>
+          <span class="skill-tag">Strukturierte Prozessgestaltung</span>
+          <span class="skill-tag">Prioritäten setzen unter Druck</span>
+        </div>
+      </div>
+      <div class="source-note">Lektüre: Management Anthology Reloaded – Lürzer & Romanos-Hofer · Praxis: Puregym AG, Movemi/Activ Fitness</div>
+    </div>
+  </div>
+
+  <!-- 8. Administration & Organisation -->
+  <div class="domain">
+    <div class="domain-header" onclick="toggleDomain(this)">
+      <span class="icon">📋</span>
+      <div class="title-group">
+        <h2>Administration & Organisation</h2>
+        <div class="subtitle">Operative Vollverantwortung in mehreren Stationen</div>
+      </div>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="domain-body">
+      <div class="subdomain">
+        <h3>Betriebsorganisation</h3>
+        <div class="skill-grid">
+          <span class="skill-tag">Kassenführung & Abrechnung</span>
+          <span class="skill-tag">Bestellwesen & Warenwirtschaft</span>
+          <span class="skill-tag">Onboarding neuer Mitarbeitender</span>
+          <span class="skill-tag">Studioorganisation</span>
+          <span class="skill-tag">Controlling (TBC-Tool)</span>
+        </div>
+      </div>
+      <div class="subdomain">
+        <h3>Marketing & Kommunikation</h3>
+        <div class="skill-grid">
+          <span class="skill-tag">Marketingplanung & -auswertung</span>
+          <span class="skill-tag">Promotionsaktionen</span>
+          <span class="skill-tag">Social-Media-Grundlagen</span>
+        </div>
+      </div>
+      <div class="subdomain">
+        <h3>Finanzdienstleistung (Postbank)</h3>
+        <div class="skill-grid">
+          <span class="skill-tag">Kontoführung & Kassenverwaltung</span>
+          <span class="skill-tag">Ein-/Auszahlungsabwicklung</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. Neuropsychologie & Lernforschung -->
+  <div class="domain">
+    <div class="domain-header" onclick="toggleDomain(this)">
+      <span class="icon">🧬</span>
+      <div class="title-group">
+        <h2>Neuropsychologie & Lernforschung</h2>
+        <div class="subtitle">Vera Birkenbihl · Autodidaktisches Selbststudium · Jugend</div>
+      </div>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="domain-body">
+      <div class="subdomain">
+        <h3>Gehirnforschung & Lernpsychologie</h3>
+        <div class="skill-grid">
+          <span class="skill-tag strong">Neuroplastizität</span>
+          <span class="skill-tag strong">Gehirngerechtes Lernen (Birkenbihl)</span>
+          <span class="skill-tag">Wie Reaktionen & Gewohnheiten entstehen</span>
+          <span class="skill-tag">Informationsverankerung im Gehirn</span>
+          <span class="skill-tag">Mustererkennung & Vernetzung</span>
+        </div>
+      </div>
+      <div class="subdomain">
+        <h3>Selbstregulation & Umprogrammierung</h3>
+        <div class="skill-grid">
+          <span class="skill-tag strong">Emotionsregulation</span>
+          <span class="skill-tag">Verhaltensveränderung durch Bewusstsein</span>
+          <span class="skill-tag">Reizverarbeitung & Stressreaktion</span>
+          <span class="skill-tag">Nonverbale Kommunikation & Körpersignale</span>
+        </div>
+      </div>
+      <div class="subdomain">
+        <h3>Sozialpsychologie & Gruppendynamik</h3>
+        <div class="skill-grid">
+          <span class="skill-tag">Konformitätsdruck & Autoritätshörigkeit</span>
+          <span class="skill-tag">Gruppendynamiken & ihre Eskalation</span>
+          <span class="skill-tag">Kinder- & Jugendpsychologie (Selbststudium)</span>
+          <span class="skill-tag">Systemdenken in sozialen Kontexten</span>
+        </div>
+      </div>
+      <div class="source-note">Quellen: Vera Birkenbihl (Videos & Bücher) · Autodidaktisches Selbststudium Neurologie & Verhaltenspsychologie · Die Welle · eigene Reflexion</div>
+    </div>
+  </div>
+
+</div><!-- /kenntnisse -->
+
+<!-- ═══════════════════════════════ BÜCHER ═══════════════════════════════ -->
+<div id="buecher" class="panel">
+
+  <div class="book-divider">Persönlichkeit & Psychologie</div>
+
+  <!-- Mindfuck -->
+  <div class="book-card open">
+    <div class="book-header" onclick="toggleBook(this)">
+      <span class="book-num">01</span>
+      <div>
+        <div class="book-title">Mindfuck</div>
+        <div class="book-author">Barbara Bock</div>
+      </div>
+      <span class="book-domain-tag tag-psych">Psychologie</span>
+    </div>
+    <div class="book-body">
+      <div class="knowledge-structure">
+        <div class="ks-block">
+          <div class="ks-label">Fachbereich</div>
+          <ul><li>Kognitive Psychologie</li><li>Selbstsabotage & Glaubenssätze</li><li>Verhaltensänderung</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Unterdisziplinen</div>
+          <ul><li>Innere Blockaden erkennen</li><li>Negative Denkmuster durchbrechen</li><li>Mentales Reframing</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Wissensstruktur dahinter</div>
+          <ul><li>Kognitive Verzerrungen (Bias)</li><li>Selbstwirksamkeit (Bandura)</li><li>Verhaltenspsychologie</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Transfer in Praxis</div>
+          <ul><li>Eigene Denkmuster reflektieren</li><li>Resilienz unter Druck</li><li>Motivationsarbeit mit Kund:innen</li></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Die vier Versprechen -->
+  <div class="book-card">
+    <div class="book-header" onclick="toggleBook(this)">
+      <span class="book-num">02</span>
+      <div>
+        <div class="book-title">Die vier Versprechen</div>
+        <div class="book-author">Don Miguel Ruiz</div>
+      </div>
+      <span class="book-domain-tag tag-psych">Philosophie / Ethik</span>
+    </div>
+    <div class="book-body">
+      <div class="knowledge-structure">
+        <div class="ks-block">
+          <div class="ks-label">Fachbereich</div>
+          <ul><li>Lebensphilosophie</li><li>Toltekische Weisheit</li><li>Persönliche Ethik</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Unterdisziplinen</div>
+          <ul><li>Integrität im Handeln</li><li>Annahmenfreiheit</li><li>Eigenverantwortung</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Wissensstruktur dahinter</div>
+          <ul><li>Stoische Ethik (Parallelen)</li><li>Soziale Konditionierung</li><li>Kommunikation ohne Annahmen</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Transfer in Praxis</div>
+          <ul><li>Klare, aufrichtige Kommunikation</li><li>Keine voreiligen Schlüsse</li><li>Lösungsorientiertes Denken</li></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="book-divider">Management & Leadership</div>
+
+  <!-- Management reloaded -->
+  <div class="book-card">
+    <div class="book-header" onclick="toggleBook(this)">
+      <span class="book-num">03</span>
+      <div>
+        <div class="book-title">Management Anthology Reloaded</div>
+        <div class="book-author">Rudolf Lürzer & Arnaldo Romanos-Hofer</div>
+      </div>
+      <span class="book-domain-tag tag-mgmt">Management</span>
+    </div>
+    <div class="book-body">
+      <div class="knowledge-structure">
+        <div class="ks-block">
+          <div class="ks-label">Fachbereich</div>
+          <ul><li>Moderne Unternehmensführung</li><li>Organisationsentwicklung</li><li>Führungskultur</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Unterdisziplinen</div>
+          <ul><li>44 Denkmodelle für Entscheider</li><li>Systemisches Management</li><li>Wertorientierte Führung</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Wissensstruktur dahinter</div>
+          <ul><li>Klassische vs. agile Führung</li><li>Mitarbeitermotivation</li><li>Organisationspsychologie</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Transfer in Praxis</div>
+          <ul><li>Eigenverantwortliches Arbeiten</li><li>Strukturiertes Vorgehen</li><li>Onboarding-Kompetenz</li></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Konfliktmanagement -->
+  <div class="book-card">
+    <div class="book-header" onclick="toggleBook(this)">
+      <span class="book-num">04</span>
+      <div>
+        <div class="book-title">Konfliktmanagement</div>
+        <div class="book-author">Heinz Jiranek</div>
+      </div>
+      <span class="book-domain-tag tag-konf">Kommunikation</span>
+    </div>
+    <div class="book-body">
+      <div class="knowledge-structure">
+        <div class="ks-block">
+          <div class="ks-label">Fachbereich</div>
+          <ul><li>Konfliktpsychologie</li><li>Mediation</li><li>Organisationskommunikation</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Unterdisziplinen</div>
+          <ul><li>Konflikttypen & -eskalation</li><li>Deeskalationstechniken</li><li>Verhandlungsführung</li><li>Systemische Mediation</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Wissensstruktur dahinter</div>
+          <ul><li>Glasl-Eskalationsmodell</li><li>Harvard-Verhandlungskonzept</li><li>Transaktionsanalyse (Grundlagen)</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Transfer in Praxis</div>
+          <ul><li>Schwierige Kundensituationen</li><li>Teamkonflikte moderieren</li><li>Ruhig & lösungsorientiert bleiben</li></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="book-divider">Versicherungsrecht & Fachwissen (VBV)</div>
+
+  <!-- VBV Bücher -->
+  <div class="book-card">
+    <div class="book-header" onclick="toggleBook(this)">
+      <span class="book-num">05</span>
+      <div>
+        <div class="book-title">VBV Rechtskenntnisse</div>
+        <div class="book-author">VBV Verlag (Schweizer Versicherungsfachwissen)</div>
+      </div>
+      <span class="book-domain-tag tag-fachrecht">Recht</span>
+    </div>
+    <div class="book-body">
+      <div class="knowledge-structure">
+        <div class="ks-block">
+          <div class="ks-label">Fachbereich</div>
+          <ul><li>Schweizerisches Privatrecht</li><li>Vertragsrecht</li><li>Haftpflichtrecht</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Unterdisziplinen</div>
+          <ul><li>OR (Obligationenrecht)</li><li>ZGB Grundlagen</li><li>Rechtsgrundlagen Versicherung</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Wissensstruktur dahinter</div>
+          <ul><li>Rechtsquellen CH</li><li>Vertragsschluss & -inhalt</li><li>Haftung & Schadensersatz</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Transfer in Praxis</div>
+          <ul><li>Compliance-Bewusstsein</li><li>Korrekte Dokumentation</li><li>Kundengespräche rechtssicher</li></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="book-card">
+    <div class="book-header" onclick="toggleBook(this)">
+      <span class="book-num">06</span>
+      <div>
+        <div class="book-title">VBV Sach- und Vermögensversicherung</div>
+        <div class="book-author">VBV Verlag</div>
+      </div>
+      <span class="book-domain-tag tag-fachrecht">Versicherung</span>
+    </div>
+    <div class="book-body">
+      <div class="knowledge-structure">
+        <div class="ks-block">
+          <div class="ks-label">Fachbereich</div>
+          <ul><li>Sachversicherung</li><li>Vermögensversicherung</li><li>Haftpflichtversicherung</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Unterdisziplinen</div>
+          <ul><li>Gebäude- & Hausratversicherung</li><li>Fahrzeugversicherung</li><li>Betriebsversicherungen</li><li>Deckungskonzepte</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Wissensstruktur dahinter</div>
+          <ul><li>VVG-Systematik</li><li>Versicherungsprinzipien</li><li>Risikobeurteilung</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Transfer in Praxis</div>
+          <ul><li>Produktvergleich & Beratung</li><li>Bedarfsermittlung</li><li>Schadensabwicklung verstehen</li></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="book-card">
+    <div class="book-header" onclick="toggleBook(this)">
+      <span class="book-num">07</span>
+      <div>
+        <div class="book-title">VBV Personen- und Sozialversicherung</div>
+        <div class="book-author">VBV Verlag</div>
+      </div>
+      <span class="book-domain-tag tag-fachrecht">Sozialrecht</span>
+    </div>
+    <div class="book-body">
+      <div class="knowledge-structure">
+        <div class="ks-block">
+          <div class="ks-label">Fachbereich</div>
+          <ul><li>Sozialversicherungsrecht</li><li>Personenversicherung</li><li>Schweizer Sozialschutzsystem</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Unterdisziplinen</div>
+          <ul><li>AHV / IV / EO / ALV</li><li>3-Säulen-System CH</li><li>BVG (Pensionskasse)</li><li>Lebens- & Erwerbsunfähigkeitsversicherung</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Wissensstruktur dahinter</div>
+          <ul><li>Subsidiaritätsprinzip</li><li>Solidarität vs. Äquivalenz</li><li>Sozialstaatliche Grundlagen</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Transfer in Praxis</div>
+          <ul><li>Gesamtberatung Kunde</li><li>Versorgungslücken erkennen</li><li>KVG + BVG kombiniert beraten</li></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="book-card">
+    <div class="book-header" onclick="toggleBook(this)">
+      <span class="book-num">08</span>
+      <div>
+        <div class="book-title">VBV Versicherungswirtschaft & Vermittlerrecht</div>
+        <div class="book-author">VBV Verlag</div>
+      </div>
+      <span class="book-domain-tag tag-fachrecht">Branchenwissen</span>
+    </div>
+    <div class="book-body">
+      <div class="knowledge-structure">
+        <div class="ks-block">
+          <div class="ks-label">Fachbereich</div>
+          <ul><li>Versicherungswirtschaft CH</li><li>Regulierung & Aufsicht</li><li>Vermittlerrecht</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Unterdisziplinen</div>
+          <ul><li>FINMA-Aufsicht</li><li>VAG (Versicherungsaufsichtsgesetz)</li><li>Maklerpflichten & -haftung</li><li>Produktregulierung</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Wissensstruktur dahinter</div>
+          <ul><li>Marktstruktur Versicherung CH</li><li>Regulatorischer Rahmen</li><li>Berufspflichten Vermittler</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Transfer in Praxis</div>
+          <ul><li>Rechtssicheres Vermitteln</li><li>Transparenz & Dokumentation</li><li>Compliance-Bewusstsein</li></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="book-divider">Medizin & Sport</div>
+
+  <!-- Rettungsdienst -->
+  <div class="book-card">
+    <div class="book-header" onclick="toggleBook(this)">
+      <span class="book-num">09</span>
+      <div>
+        <div class="book-title">Rettungsdienst (Fachbuch)</div>
+        <div class="book-author">Notfallmedizinische Fachliteratur</div>
+      </div>
+      <span class="book-domain-tag tag-med">Notfallmedizin</span>
+    </div>
+    <div class="book-body">
+      <div class="knowledge-structure">
+        <div class="ks-block">
+          <div class="ks-label">Fachbereich</div>
+          <ul><li>Präklinische Notfallmedizin</li><li>Rettungswesen</li><li>Medizinische Versorgung</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Unterdisziplinen</div>
+          <ul><li>Einsatztaktik & -ablauf</li><li>Patientenassessment (ABCDE)</li><li>Vitalfunktionen & Monitoring</li><li>Pharmakologie Notfall</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Wissensstruktur dahinter</div>
+          <ul><li>Pathophysiologie Notfallbilder</li><li>Schock, Trauma, Reanimation</li><li>Protokollsysteme (NADOC)</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Transfer in Praxis</div>
+          <ul><li>Systematische Patientenbeurteilung</li><li>Klare Entscheidungen unter Druck</li><li>Präzise Dokumentation</li></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sport als Therapie -->
+  <div class="book-card">
+    <div class="book-header" onclick="toggleBook(this)">
+      <span class="book-num">10</span>
+      <div>
+        <div class="book-title">Therapie und Prävention durch Sport – Band 1–4</div>
+        <div class="book-author">Elsevier Verlag · Fachbuchreihe</div>
+      </div>
+      <span class="book-domain-tag tag-sport">Sport & Gesundheit</span>
+    </div>
+    <div class="book-body">
+      <div class="knowledge-structure">
+        <div class="ks-block">
+          <div class="ks-label">Bände im Überblick</div>
+          <ul><li>Bd. 1: Grundlagen</li><li>Bd. 2: Neurologie, Psychiatrie / Psychosomatik, Schmerzsyndrome</li><li>Bd. 3: Orthopädie, Rheumatologie</li><li>Bd. 4: Innere Medizin / Pädiatrie</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Fachbereiche</div>
+          <ul><li>Sporttherapie & Rehabilitation</li><li>Klinische Bewegungsmedizin</li><li>Prävention & Gesundheitsförderung</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Wissensstruktur dahinter</div>
+          <ul><li>Evidenzbasierte Sportmedizin</li><li>Neuroplastizität & Bewegung</li><li>Psychosomatik & Sport</li><li>Dosierungs- & Belastungskonzepte</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Transfer in Praxis</div>
+          <ul><li>Therapeutische Trainingsplanung</li><li>Beratung bei Beschwerden & Einschränkungen im Fitnessstudio</li><li>Übungsauswahl & Anpassung bei chron. Erkrankungen</li><li>Medizinisches Hintergrundwissen als Fitnesstrainerin</li></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="book-divider">Literatur & Gesellschaft</div>
+
+  <!-- Siddhartha -->
+  <div class="book-card">
+    <div class="book-header" onclick="toggleBook(this)">
+      <span class="book-num">11</span>
+      <div>
+        <div class="book-title">Siddhartha</div>
+        <div class="book-author">Hermann Hesse</div>
+      </div>
+      <span class="book-domain-tag tag-psych">Philosophie</span>
+    </div>
+    <div class="book-body">
+      <div class="knowledge-structure">
+        <div class="ks-block">
+          <div class="ks-label">Fachbereich</div>
+          <ul><li>Östliche Philosophie</li><li>Selbstfindung & innere Wahrheit</li><li>Existenzphilosophie</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Unterdisziplinen</div>
+          <ul><li>Loslassen äusserer Erwartungen</li><li>Eigener Weg vs. Fremdbestimmung</li><li>Gegenwärtigkeit & Akzeptanz</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Wissensstruktur dahinter</div>
+          <ul><li>Buddhistische Grundprinzipien</li><li>Individuation (Jung)</li><li>Authentizität als Lebenshaltung</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Transfer in Praxis</div>
+          <ul><li>Eigenverantwortung & innere Klarheit</li><li>Nicht manipulieren wollen</li><li>Eigenen Weg konsequent gehen</li></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Graf von Monte Christo -->
+  <div class="book-card">
+    <div class="book-header" onclick="toggleBook(this)">
+      <span class="book-num">12</span>
+      <div>
+        <div class="book-title">Der Graf von Monte Christo</div>
+        <div class="book-author">Alexandre Dumas</div>
+      </div>
+      <span class="book-domain-tag tag-konf">Ethik & Moral</span>
+    </div>
+    <div class="book-body">
+      <div class="knowledge-structure">
+        <div class="ks-block">
+          <div class="ks-label">Fachbereich</div>
+          <ul><li>Moralphilosophie</li><li>Soziale Gerechtigkeit</li><li>Machtdynamiken</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Unterdisziplinen</div>
+          <ul><li>Grenzen von Rache & Gerechtigkeit</li><li>Identität & Transformation</li><li>Gesellschaftliche Machtstrukturen</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Wissensstruktur dahinter</div>
+          <ul><li>Ethik der Vergeltung</li><li>Systemische Ungerechtigkeit</li><li>Psychologie von Macht & Kontrolle</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Transfer in Praxis</div>
+          <ul><li>Moralische Grenzen erkennen</li><li>Langfristiges vs. reaktives Denken</li><li>Systemkritisches Bewusstsein</li></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Die Welle -->
+  <div class="book-card">
+    <div class="book-header" onclick="toggleBook(this)">
+      <span class="book-num">13</span>
+      <div>
+        <div class="book-title">Die Welle</div>
+        <div class="book-author">Morton Rhue (Film: Dennis Gansel, 2008)</div>
+      </div>
+      <span class="book-domain-tag tag-mgmt">Sozialpsychologie</span>
+    </div>
+    <div class="book-body">
+      <div class="knowledge-structure">
+        <div class="ks-block">
+          <div class="ks-label">Fachbereich</div>
+          <ul><li>Sozialpsychologie</li><li>Gruppendynamik & Konformität</li><li>Politische Psychologie</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Unterdisziplinen</div>
+          <ul><li>Autoritätshörigkeit & Gehorsam</li><li>Gruppenidentität & Ausgrenzung</li><li>Eskalationsdynamiken</li><li>Faschismus als Systemphänomen</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Wissensstruktur dahinter</div>
+          <ul><li>Milgram-Experiment (Autorität)</li><li>Zimbardo (Rollenverhalten)</li><li>Geminderte Dynamiken im Alltag</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Transfer in Praxis</div>
+          <ul><li>Gruppendruck im Berufsalltag erkennen</li><li>Systemkritisches Denken</li><li>Eigenständigkeit bewahren</li></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="book-divider">Lyrik & Sprache</div>
+
+  <!-- Erich Fried -->
+  <div class="book-card">
+    <div class="book-header" onclick="toggleBook(this)">
+      <span class="book-num">14</span>
+      <div>
+        <div class="book-title">Gedichte</div>
+        <div class="book-author">Erich Fried</div>
+      </div>
+      <span class="book-domain-tag tag-psych">Lyrik & Ethik</span>
+    </div>
+    <div class="book-body">
+      <div class="knowledge-structure">
+        <div class="ks-block">
+          <div class="ks-label">Fachbereich</div>
+          <ul><li>Politische Lyrik</li><li>Sprachphilosophie</li><li>Ethik & Humanismus</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Unterdisziplinen</div>
+          <ul><li>Sprache als Machtmittel</li><li>Liebe & politische Verantwortung</li><li>Widerstand durch Worte</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Wissensstruktur dahinter</div>
+          <ul><li>Kritische Sprachreflexion</li><li>Humanistische Grundhaltung</li><li>Literatur als gesellschaftlicher Spiegel</li></ul>
+        </div>
+        <div class="ks-block">
+          <div class="ks-label">Transfer in Praxis</div>
+          <ul><li>Präzise, ehrliche Kommunikation</li><li>Eigenes kreatives Schreiben</li><li>Moralische Haltung im Handeln</li></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /buecher -->
+
+<footer>Lisa Nagel · Wissensstruktur · Stand Mai 2026 · Generiert aus CV, Zertifikaten & Lektüre</footer>
+
+<script>
+function showPanel(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+function toggleDomain(header) {
+  header.parentElement.classList.toggle('open');
+}
+function toggleBook(header) {
+  header.parentElement.classList.toggle('open');
+}
+</script>
+</body>
+</html>
