@@ -27,7 +27,6 @@
     min-height: 100vh;
   }
 
-  /* ── NAV ── */
   .main-nav {
     display: flex;
     flex-wrap: wrap;
@@ -57,7 +56,7 @@
   header {
     background: var(--ink);
     color: var(--paper);
-    padding: 4rem 2.5rem 3rem;
+    padding: 3rem 2.5rem;
     position: relative;
     overflow: hidden;
   }
@@ -85,79 +84,57 @@
     user-select: none;
   }
 
-  .hero-label {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.62rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 1rem;
-  }
-  header h1 {
-    font-family: 'DM Serif Display', serif;
-    font-weight: 500; 
-    font-size: clamp(2rem, 5vw, 4rem); 
-    line-height: 1.2;
+  .hero-inner {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
     position: relative;
     z-index: 1;
+    flex-wrap: wrap;
+  }
+
+  .hero-photo {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center top;
+    border: 3px solid var(--accent);
+    flex-shrink: 0;
+  }
+
+  .hero-text { flex: 1; min-width: 200px; }
+
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-weight: 500;
+    font-size: clamp(2rem, 5vw, 4rem);
+    line-height: 1.1;
     display: flex;
     align-items: baseline;
     flex-wrap: wrap;
-    gap: 1.5rem; /* Das ist der Abstand zwischen Name und Begrüssung */
+    gap: 1rem;
   }
-
+  header h1 em { color: var(--accent); font-style: italic; }
   header h1 .welcome-text {
     font-family: 'DM Serif Display', serif;
-font-style: italic;
-    font-size: 0.35em; 
-    font-weight: 300; 
-    color: var(--accent); 
+    font-style: italic;
+    font-size: 0.35em;
+    font-weight: 300;
+    color: var(--accent);
     letter-spacing: 0.05em;
-    text-transform: none; 
+    text-transform: none;
   }
-
-  .hero-sub {
-    font-size: 0.75rem;
-    color: #aaa;
-    margin-top: 1.5rem;
-    line-height: 1.7;
-    max-width: 480px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .hero-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    margin-top: 1.5rem;
-    position: relative;
-    z-index: 1;
-  }
-  .hero-tag {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.6rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 0.25rem 0.6rem;
-    border: 1px solid #2a2a2a;
-    color: #888;
-    border-radius: 2px;
-    transition: all 0.2s;
-  }
-  .hero-tag:hover { border-color: var(--accent); color: var(--accent); }
 
   .hero-status {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    margin-top: 1.5rem;
+    margin-top: 1rem;
     font-size: 0.65rem;
     color: #666;
     font-family: 'Syne', sans-serif;
     letter-spacing: 0.08em;
-    position: relative;
-    z-index: 1;
   }
   .status-dot {
     width: 7px; height: 7px;
@@ -170,7 +147,6 @@ font-style: italic;
   /* ── MAIN ── */
   main { max-width: 900px; margin: 0 auto; padding: 2.5rem 2rem; }
 
-  /* ── SECTION LABEL ── */
   .section-label {
     font-family: 'Syne', sans-serif;
     font-size: 0.62rem;
@@ -188,7 +164,7 @@ font-style: italic;
   }
   .section-label:first-child { margin-top: 0; }
 
-  /* ── PROFIL BLOCK ── */
+  /* ── PROFIL ── */
   .profil-accordion {
     border: 1.5px solid var(--line);
     background: var(--card);
@@ -245,8 +221,20 @@ font-style: italic;
   .profil-body p:last-child { margin-bottom: 0; }
   .profil-body p em { color: var(--accent); font-style: italic; }
   .profil-body p strong { color: var(--ink); font-weight: 500; }
+  .profil-body h5 {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 1rem 0 0.4rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .profil-body h5:first-child { margin-top: 0; }
 
-  /* ── STATS GRID ── */
+  /* ── STATS ── */
   .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -276,7 +264,7 @@ font-style: italic;
     line-height: 1.4;
   }
 
-  /* ── PORTFOLIO GRID ── */
+  /* ── PORTFOLIO ── */
   .portfolio-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -311,7 +299,6 @@ font-style: italic;
   .p-card:hover { background: #f0ebe0; }
   .p-card.coming { opacity: 0.4; pointer-events: none; }
 
-  .p-card-top { }
   .p-card-num {
     font-size: 0.58rem;
     color: var(--muted);
@@ -350,7 +337,7 @@ font-style: italic;
   .p-card-arrow { font-size: 0.9rem; color: var(--muted); }
   .p-card:hover .p-card-arrow { color: var(--accent); }
 
-  /* ── WERDEGANG ── */
+  /* ── TIMELINE ── */
   .timeline {
     position: relative;
     padding-left: 1.5rem;
@@ -405,10 +392,11 @@ font-style: italic;
   }
 
   @media (max-width: 600px) {
-    header { padding: 2.5rem 1.5rem 2rem; }
+    header { padding: 2rem 1.5rem; }
     main { padding: 1.5rem 1rem; }
     .portfolio-grid { grid-template-columns: 1fr; }
     .stats-grid { grid-template-columns: 1fr 1fr; }
+    .hero-photo { width: 90px; height: 90px; }
   }
 </style>
 </head>
@@ -423,19 +411,51 @@ font-style: italic;
 </nav>
 
 <header>
-  <h1>Lisa <em>Nagel</em> <span class="welcome-text">Herzlich willkommen</span></h1>
-  <div class="hero-status">
-    <span class="status-dot"></span>
-    Offen für neue Stellen · Schweiz
+  <div class="hero-inner">
+    <svg class="hero-photo" viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="65" cy="65" r="65" fill="#1a1a1a"/>
+      <!-- Katzensilhouette -->
+      <g fill="#c9a227">
+        <!-- Körper -->
+        <ellipse cx="65" cy="85" rx="28" ry="22"/>
+        <!-- Kopf -->
+        <circle cx="65" cy="58" r="18"/>
+        <!-- Ohren -->
+        <polygon points="50,44 44,28 58,40"/>
+        <polygon points="80,44 86,28 72,40"/>
+        <!-- Ohren innen -->
+        <polygon points="50,42 46,31 57,40" fill="#0d0d0d" opacity="0.5"/>
+        <polygon points="80,42 84,31 73,40" fill="#0d0d0d" opacity="0.5"/>
+        <!-- Augen -->
+        <ellipse cx="58" cy="57" rx="4" ry="5" fill="#0d0d0d"/>
+        <ellipse cx="72" cy="57" rx="4" ry="5" fill="#0d0d0d"/>
+        <circle cx="57" cy="56" r="1.2" fill="#f5f0e8"/>
+        <circle cx="71" cy="56" r="1.2" fill="#f5f0e8"/>
+        <!-- Nase -->
+        <polygon points="65,63 62,66 68,66" fill="#0d0d0d"/>
+        <!-- Schnurrhaare -->
+        <line x1="47" y1="64" x2="61" y2="66" stroke="#0d0d0d" stroke-width="1" opacity="0.6"/>
+        <line x1="47" y1="67" x2="61" y2="67" stroke="#0d0d0d" stroke-width="1" opacity="0.6"/>
+        <line x1="69" y1="66" x2="83" y2="64" stroke="#0d0d0d" stroke-width="1" opacity="0.6"/>
+        <line x1="69" y1="67" x2="83" y2="67" stroke="#0d0d0d" stroke-width="1" opacity="0.6"/>
+        <!-- Schwanz -->
+        <path d="M93,95 Q110,80 105,65 Q102,58 97,68 Q94,78 88,88" fill="#c9a227" stroke="none"/>
+      </g>
+    </svg>
+    <div class="hero-text">
+      <h1>Lisa <em>Nagel</em> <span class="welcome-text">Herzlich willkommen</span></h1>
+      <div class="hero-status">
+        <span class="status-dot"></span>
+        Offen für neue Stellen · Schweiz · Remote · Europa
+      </div>
+    </div>
   </div>
 </header>
 
 <main>
 
-  <!-- ── PROFIL ── -->
   <div class="section-label">Profil</div>
 
-  <!-- Kurzprofil immer sichtbar -->
   <div class="profil-accordion open">
     <div class="profil-toggle" onclick="this.parentElement.classList.toggle('open')">
       <span class="pt-icon">👤</span>
@@ -451,22 +471,30 @@ font-style: italic;
     </div>
   </div>
 
-  <!-- Erweitertes Recruiter-Profil aufklappbar -->
   <div class="profil-accordion">
     <div class="profil-toggle" onclick="this.parentElement.classList.toggle('open')">
       <span class="pt-icon">🧠</span>
       <div style="flex:1;">
         <div class="pt-title">Erweitertes Kompetenzprofil</div>
-        <div class="pt-sub">Systemisches Denken · KI & menschliches Verhalten · Analytische Stärken</div>
+        <div class="pt-sub">Systemisches Denken · Analytische Stärken</div>
       </div>
       <span class="chevron">▾</span>
     </div>
     <div class="profil-body">
-      <h5>Analytisches und systemorientiertes Denken</h5> <p> Ich arbeite mit einer analytischen und systemorientierten Denkweise und interessiere mich besonders für die Strukturen und Wechselwirkungen sozialer, kognitiver und technischer Systeme. Dabei analysiere ich, wie Entscheidungen entstehen, welche Faktoren menschliches Verhalten beeinflussen und wie sich wiederkehrende Muster auf Gruppen, Prozesse und digitale Systeme auswirken. </p> <h5>Mensch, KI und digitale Systeme</h5> <p> Ein besonderer Schwerpunkt meines Interesses liegt an der Schnittstelle zwischen menschlichem Verhalten und künstlicher Intelligenz. Dabei befasse ich mich mit der Frage, wie Menschen und intelligente Systeme miteinander interagieren, wie Entscheidungen durch algorithmische Prozesse unterstützt werden und welche Auswirkungen dies auf Wahrnehmung, Kommunikation und Verhalten haben kann. </p> <p> Mein Interesse umfasst sowohl die technische Logik solcher Systeme als auch deren praktische Anwendung in realen Umgebungen. </p> <h5>Von der Analyse zur Lösung</h5> <p> Ich betrachte komplexe Fragestellungen nicht isoliert, sondern im Zusammenhang ihrer einzelnen Bestandteile. Dabei analysiere ich Strukturen, erkenne wiederkehrende Muster und leite daraus nachvollziehbare Lösungsansätze, Konzepte oder Prozessverbesserungen ab. </p> <p> Mein Fokus liegt darauf, komplexe Zusammenhänge verständlich zu machen und in praktikable Modelle oder Handlungsansätze zu überführen. </p> <h5>Strukturierte Arbeitsweise</h5> <p> In meiner Arbeitsweise unterscheide ich bewusst zwischen Beobachtung, Interpretation und Schlussfolgerung. Dadurch kann ich technische, organisatorische und soziale Fragestellungen strukturiert analysieren und unterschiedliche Einflussfaktoren getrennt bewerten. </p> <p> Diese Herangehensweise unterstützt mich dabei, Probleme systematisch zu erfassen und Lösungen nachvollziehbar zu entwickeln. </p>
+      <h5>Analytisches und systemorientiertes Denken</h5>
+      <p>Ich arbeite mit einer analytischen und systemorientierten Denkweise und interessiere mich besonders für die Strukturen und Wechselwirkungen sozialer, kognitiver und technischer Systeme. Dabei analysiere ich, wie Entscheidungen entstehen, welche Faktoren menschliches Verhalten beeinflussen und wie sich wiederkehrende Muster auf Gruppen, Prozesse und digitale Systeme auswirken.</p>
+      <h5>Mensch, KI und digitale Systeme</h5>
+      <p>Ein besonderer Schwerpunkt meines Interesses liegt an der Schnittstelle zwischen menschlichem Verhalten und künstlicher Intelligenz. Dabei befasse ich mich mit der Frage, wie Menschen und intelligente Systeme miteinander interagieren, wie Entscheidungen durch algorithmische Prozesse unterstützt werden und welche Auswirkungen dies auf Wahrnehmung, Kommunikation und Verhalten haben kann.</p>
+      <p>Mein Interesse umfasst sowohl die technische Logik solcher Systeme als auch deren praktische Anwendung in realen Umgebungen.</p>
+      <h5>Von der Analyse zur Lösung</h5>
+      <p>Ich betrachte komplexe Fragestellungen nicht isoliert, sondern im Zusammenhang ihrer einzelnen Bestandteile. Dabei analysiere ich Strukturen, erkenne wiederkehrende Muster und leite daraus nachvollziehbare Lösungsansätze, Konzepte oder Prozessverbesserungen ab.</p>
+      <p>Mein Fokus liegt darauf, komplexe Zusammenhänge verständlich zu machen und in praktikable Modelle oder Handlungsansätze zu überführen.</p>
+      <h5>Strukturierte Arbeitsweise</h5>
+      <p>In meiner Arbeitsweise unterscheide ich bewusst zwischen Beobachtung, Interpretation und Schlussfolgerung. Dadurch kann ich technische, organisatorische und soziale Fragestellungen strukturiert analysieren und unterschiedliche Einflussfaktoren getrennt bewerten.</p>
+      <p>Diese Herangehensweise unterstützt mich dabei, Probleme systematisch zu erfassen und Lösungen nachvollziehbar zu entwickeln.</p>
     </div>
   </div>
 
-  <!-- ── KENNZAHLEN ── -->
   <div class="section-label">Auf einen Blick</div>
   <div class="stats-grid">
     <div class="stat-box">
@@ -487,11 +515,10 @@ font-style: italic;
     </div>
   </div>
 
-  <!-- ── PORTFOLIO ── -->
   <div class="section-label">Portfolio</div>
   <div class="portfolio-grid">
     <a class="p-card" href="skills.html">
-      <div class="p-card-top">
+      <div>
         <div class="p-card-num">01 / Kompetenzen</div>
         <span class="p-card-icon">🗂️</span>
         <div class="p-card-title">Wissen & Kompetenzen</div>
@@ -503,7 +530,7 @@ font-style: italic;
       </div>
     </a>
     <a class="p-card" href="certifikates.html">
-      <div class="p-card-top">
+      <div>
         <div class="p-card-num">02 / Nachweise</div>
         <span class="p-card-icon">📜</span>
         <div class="p-card-title">Zertifikate & Diplome</div>
@@ -515,7 +542,7 @@ font-style: italic;
       </div>
     </a>
     <a class="p-card" href="projects.html">
-      <div class="p-card-top">
+      <div>
         <div class="p-card-num">03 / Essays</div>
         <span class="p-card-icon">✍️</span>
         <div class="p-card-title">Projekte & Essays</div>
@@ -527,7 +554,7 @@ font-style: italic;
       </div>
     </a>
     <a class="p-card coming" href="#">
-      <div class="p-card-top">
+      <div>
         <div class="p-card-num">04 / Code</div>
         <span class="p-card-icon">🐍</span>
         <div class="p-card-title">Python & Netzwerk-Projekte</div>
@@ -540,7 +567,6 @@ font-style: italic;
     </a>
   </div>
 
-  <!-- ── WERDEGANG ── -->
   <div class="section-label">Werdegang</div>
   <div class="timeline">
     <div class="tl-item">
