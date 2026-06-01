@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lisa Nagel – Projekte & Essays</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0d0d0d;
+    --paper: #f5f0e8;
+    --accent: #c9a227;
+    --accent2: #2a5f8f;
+    --muted: #6b6459;
+    --line: #d4cec4;
+    --card: #faf7f2;
+    --red: #c84b2f;
+    --green: #2a7a4a;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'DM Mono', monospace;
+    min-height: 100vh;
+  }
+
+  .main-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    border-bottom: 2px solid var(--ink);
+    background: var(--card);
+    justify-content: center;
+  }
+  .main-nav a {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--muted);
+    padding: 1rem 1.4rem;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .main-nav a:hover { color: var(--ink); border-bottom-color: var(--accent); }
+  .main-nav a.active { color: var(--ink); border-bottom-color: var(--accent); }
+
+  header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 3rem 2.5rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.18;
+  }
+  header .label {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #aaa;
+    margin-bottom: 0.6rem;
+    font-family: 'Syne', sans-serif;
+  }
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    line-height: 1.05;
+    margin-bottom: 0.5rem;
+  }
+  header h1 em { color: var(--accent); font-style: italic; }
+  header p {
+    font-size: 0.78rem;
+    color: #bbb;
+    max-width: 560px;
+    line-height: 1.6;
+    margin-top: 0.8rem;
+  }
+
+  main {
+    padding: 2.5rem 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .section-divider {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 2.5rem 0 1.2rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .section-divider .lang-badge {
+    font-size: 0.55rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 2px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+  }
+  .badge-de { background: #e8e0d0; color: var(--ink); border: 1px solid var(--line); }
+  .badge-en { background: #e0eaf5; color: var(--accent2); border: 1px solid #b0c8e0; }
+
+  .essay-card {
+    margin-bottom: 1.5rem;
+    border: 1.5px solid var(--line);
+    background: var(--card);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .essay-header {
+    padding: 1.2rem 1.4rem;
+    cursor: pointer;
+    user-select: none;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    transition: background 0.2s;
+  }
+  .essay-header:hover { background: #f0ebe0; }
+
+  .essay-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.8rem;
+    color: var(--line);
+    font-style: italic;
+    line-height: 1;
+    min-width: 2rem;
+    text-align: center;
+  }
+
+  .essay-meta { flex: 1; }
+  .essay-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 0.4rem;
+  }
+  .essay-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: center;
+  }
+  .essay-date {
+    font-size: 0.62rem;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+  }
+  .essay-tag {
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.15rem 0.45rem;
+    border-radius: 2px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+  }
+  .tag-ethics  { background: #fde8e0; color: #c84b2f; }
+  .tag-law     { background: #e0eaf5; color: #2a5f8f; }
+  .tag-society { background: #e8f0e8; color: #2a7a3a; }
+  .tag-tech    { background: #f0e8f5; color: #7a3a9a; }
+  .tag-en      { background: #e0eaf5; color: #2a5f8f; border: 1px solid #b0c8e0; }
+
+  .essay-chevron {
+    font-size: 0.9rem;
+    color: var(--muted);
+    transition: transform 0.25s;
+    flex-shrink: 0;
+  }
+  .essay-card.open .essay-chevron { transform: rotate(180deg); }
+
+  .essay-body {
+    display: none;
+    border-top: 1.5px solid var(--line);
+  }
+  .essay-card.open .essay-body { display: block; }
+
+  .essay-content {
+    padding: 1.4rem;
+  }
+
+  .essay-section {
+    margin-bottom: 1.4rem;
+  }
+  .essay-section:last-child { margin-bottom: 0; }
+
+  .essay-section h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.6rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .essay-section p {
+    font-size: 0.78rem;
+    line-height: 1.8;
+    color: #2a2520;
+    margin-bottom: 0.8rem;
+  }
+  .essay-section p:last-child { margin-bottom: 0; }
+  .essay-section p em { color: var(--accent); font-style: italic; }
+
+  .essay-footer {
+    padding: 0.8rem 1.4rem;
+    border-top: 1px dashed var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.62rem;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    background: #f5f0e8;
+  }
+
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.62rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    border-top: 1px solid var(--line);
+    margin-top: 2rem;
+  }
+
+  @media (max-width: 600px) {
+    main { padding: 1.5rem 1rem; }
+    header { padding: 2rem 1.5rem; }
+    .essay-header { grid-template-columns: auto 1fr auto; gap: 0.6rem; }
+    .essay-num { font-size: 1.3rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="main-nav">
+  <a href="index.html">Über mich</a>
+  <a href="skills.html">Wissen & Kompetenzen</a>
+  <a href="certifikates.html">Zertifikate</a>
+  <a href="projects.html" class="active">Projekte & Essays</a>
+  <a href="contact.html">Kontakt</a>
+</nav>
+
+<header>
+  <p class="label">Hier verbinde ich Theorie & Praxis</p>
+  <h1>Projekte &<br><em>Essays</em></h1>
+  <p>Eine wachsende Ansicht meiner Essays und Projekte.<br>Feedback oder Fragen dazu? Lassen Sie uns gerne vernetzen!</p>
+</header>
+
+<main>
+
+  <!-- ══ DEUTSCH ══ -->
+  <div class="section-divider">
+    Deutschsprachige Essays
+    <span class="lang-badge badge-de">DE</span>
+  </div>
+
+  <!-- DE 01: Gesichtserkennung -->
+  <div class="essay-card open">
+    <div class="essay-header" onclick="toggleEssay(this)">
+      <span class="essay-num">01</span>
+      <div class="essay-meta">
+        <div class="essay-title">Gesichtserkennung & die Olympischen Spiele Paris 2024</div>
+        <div class="essay-info">
+          <span class="essay-date">29. Mai 2026</span>
+          <span class="essay-tag tag-law">Recht</span>
+          <span class="essay-tag tag-tech">Biometrie</span>
+          <span class="essay-tag tag-ethics">Ethik</span>
+        </div>
+      </div>
+      <span class="essay-chevron">▾</span>
+    </div>
+    <div class="essay-body">
+      <div class="essay-content">
+        <div class="essay-section">
+          <h3>Was ist Gesichtserkennung?</h3>
+          <p>Gesichtserkennung ist eine biometrische Technologie, die es Computern ermöglicht, Personen anhand ihrer Gesichtszüge – entweder in statischen Bildern oder Videostreams – zu identifizieren oder zu verifizieren.</p>
+          <p>Sie dient zwei unterschiedlichen Zwecken: der Authentifizierung, also der Verifizierung einer bekannten Identität, wie beispielsweise beim Entsperren eines Smartphones, und der Identifizierung, also der Erkennung einer Person innerhalb einer größeren Gruppe oder Datenbank.</p>
+        </div>
+        <div class="essay-section">
+          <h3>Risiken und Bedenken</h3>
+          <p>Trotz ihrer weiten Verbreitung gilt die Gesichtserkennung als die ungenaueste aller biometrischen Methoden. Eine OECD-Studie aus dem Jahr 2016 wies auf erhebliche Missbrauchsrisiken hin, darunter die Überwachung politischer Aktivisten, die Fehlidentifizierung von Personen und die gezielte Diskriminierung ethnischer Minderheiten. Große Technologieunternehmen wie IBM, Amazon und Microsoft reduzierten oder stellten den Verkauf von Gesichtserkennungsprodukten aufgrund wachsender ethischer Bedenken ein. Amnesty International hat schwerwiegende Einwände erhoben und darauf hingewiesen, dass die Trainingsdatensätze nicht ausreichend divers sind, wodurch die Systeme deutlich ungenauer werden, insbesondere für Menschen mit dunklerer Hautfarbe, Frauen und Minderheiten. Dies erhöht das Risiko einer fälschlichen Identifizierung und Verhaftung.</p>
+        </div>
+        <div class="essay-section">
+          <h3>Rechtlicher Rahmen</h3>
+          <p>Aus rechtlicher Sicht stuft Artikel 9 der DSGVO biometrische Daten als sensible personenbezogene Daten ein, die eines erhöhten Schutzes bedürfen. Der Europarat hat zudem festgelegt, dass solche Technologien die Menschenwürde und die Grundfreiheiten nicht beeinträchtigen dürfen. Der EU-AI-Act geht noch weiter: Gemäß Artikel 5 Absatz 1 Buchstabe h ist die biometrische Identifizierung in Echtzeit im öffentlichen Raum verboten. Ausnahmen gelten lediglich für die Terrorismusbekämpfung oder die Suche nach Verdächtigen schwerer Straftaten und nur unter strengen Verfahrensauflagen, einschließlich vorheriger gerichtlicher Genehmigung und einer Folgenabschätzung der Grundrechte.</p>
+        </div>
+        <div class="essay-section">
+          <h3>Nizza 2020: Ein Präzedenzfall</h3>
+          <p>Der Karneval von Nizza 2020 verdeutlichte, warum eine solche Regulierung notwendig wurde. Die CNIL kritisierte die Rechtsgrundlage des Experiments und kam zu dem Schluss, dass die bestehenden Rahmenbedingungen unzureichend seien und ein klarerer Rechtsrahmen dringend erforderlich sei – eine Lücke, die das KI-Gesetz inzwischen teilweise geschlossen hat.</p>
+        </div>
+        <div class="essay-section">
+          <h3>Paris 2024: Wo die Grenze gezogen wurde</h3>
+          <p>Bis zu den Olympischen Spielen 2024 in Paris hatte Frankreich eine klare Grenze gezogen. Gesichtserkennung wurde ausdrücklich verboten. Stattdessen setzten die Behörden algorithmische Videoüberwachung ein, die Situationen statt Einzelpersonen, zurückgelassene Gegenstände, Menschenmengen, Waffen und ungewöhnliches Verhalten erkennen konnte. Ein menschlicher Bediener behielt dabei die volle Entscheidungsgewalt.</p>
+        </div>
+        <div class="essay-section">
+          <h3>Die versteckte Diskriminierung</h3>
+          <p>Diese Unterscheidung ist jedoch weniger eindeutig, als sie scheint. Das System wurde darauf trainiert, abnormales Verhalten zu erkennen, und Normalität ist keine objektive Kategorie. Sie spiegelt die Verhaltensmuster derjenigen wider, die die Trainingsdaten generiert haben. Eine Person, die Selbstgespräche führt, sich anders bewegt oder sich von den Normen der Mehrheit abhebt, kann als verdächtig eingestuft werden, nicht weil sie eine Bedrohung darstellt, sondern weil sie außerhalb eines statistisch definierten Standards liegt. Dies führt zu einer algorithmischen Diskriminierung, die keine böswillige Absicht erfordert. Neurodivergente Personen, Menschen mit unterschiedlichem kulturellem Hintergrund oder solche, die sichtbaren Stress erleben, werden systematisch häufiger erfasst und kontrolliert. Mit der Zeit fließt dies in die Trainingsdaten ein und verstärkt Verzerrungen in großem Umfang.</p>
+        </div>
+        <div class="essay-section">
+          <h3>Der Panoptikum-Effekt</h3>
+          <p>Dieser Mechanismus reicht über die staatliche Überwachung hinaus. Soziale Medien haben eine parallele Dynamik geschaffen. Die Allgegenwart von Smartphone-Kameras führt dazu, dass sich die Menschen zunehmend bewusst sind, dass jeder Moment aufgezeichnet und geteilt werden könnte, was das Verhalten grundlegend verändert. Authentischer Selbstausdruck wird nicht durch explizite Verbote unterdrückt, sondern durch das Wissen um die mögliche Enthüllung – was Michel Foucault als Panoptikum-Effekt bezeichnete: Die bloße Möglichkeit, beobachtet zu werden, genügt, um Konformität zu erzeugen. Sowohl das Pariser Überwachungssystem als auch die sozialen Medien funktionieren nach demselben Prinzip: Sie definieren Normalität und erzeugen Konformitätsdruck. Wer nicht der Norm entspricht, ist mit unverhältnismäßigen Konsequenzen konfrontiert, und in beiden Fällen ist die Diskriminierung strukturell und nicht vorsätzlich.</p>
+        </div>
+        <div class="essay-section">
+          <h3>Fazit</h3>
+          <p>Die Olympischen Spiele 2024 in Paris haben gezeigt, dass KI-gestützte Überwachung auch ohne Gesichtserkennung möglich ist. Das Fehlen von Gesichtserkennung garantiert jedoch nicht die Abwesenheit von Diskriminierung. Solange Überwachungssysteme Verhaltensnormen als Maßstab verwenden, werden sie diejenigen systematisch benachteiligen, die diesen Normen nicht entsprechen. Eine wirksame Regulierung muss daher nicht nur die Identifizierung von Personen regeln, sondern auch deren Beobachtung und Beurteilung.</p>
+        </div>
+      </div>
+      <div class="essay-footer">
+        <span>Una Europa MOOC „AI in Society" · Kap. 5.2 · Eigenrecherche</span>
+        <span>29. Mai 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ ENGLISCH ══ -->
+  <div class="section-divider" style="margin-top: 3rem;">
+    English Essays
+    <span class="lang-badge badge-en">EN</span>
+  </div>
+
+  <!-- EN 02: AI Discrimination -->
+  <div class="essay-card">
+    <div class="essay-header" onclick="toggleEssay(this)">
+      <span class="essay-num">02</span>
+      <div class="essay-meta">
+        <div class="essay-title">AI, Discrimination and Organizational Bias</div>
+        <div class="essay-info">
+          <span class="essay-date">27 May 2026</span>
+          <span class="essay-tag tag-ethics">Ethics</span>
+          <span class="essay-tag tag-society">Society</span>
+          <span class="essay-tag tag-tech">AI Systems</span>
+          <span class="essay-tag tag-en">EN</span>
+        </div>
+      </div>
+      <span class="essay-chevron">▾</span>
+    </div>
+    <div class="essay-body">
+      <div class="essay-content">
+        <div class="essay-section">
+          <p>Artificial intelligence is often presented as objective and neutral. However, AI systems are created, trained, and deployed by human organizations that already contain social structures, biases, and institutional norms. Because of this, AI can reproduce and even amplify existing inequalities rather than eliminate them.</p>
+          <p>One of the central reasons behind discrimination in AI is biased or incomplete data. AI systems learn from historical information. If the historical data already reflects unfair treatment, exclusion, or unequal opportunities, the AI system may reproduce these patterns. For example, an AI hiring system trained on previous recruitment decisions may prefer applicants that resemble employees who were historically considered a "good fit" for the organization. This can indirectly disadvantage people with different communication styles, backgrounds, or behavioral patterns even if they are technically competent.</p>
+          <p>Another important issue is that organizations often prioritize social conformity over actual capability. This problem exists independently from AI, but AI systems can strengthen it further. In many workplaces, teams unconsciously select people who match existing social norms instead of people who bring new perspectives or skills. As a result, groups can become socially homogeneous and resistant to change. Individuals who communicate differently or question existing structures may be excluded before they have the opportunity to develop within the organization.</p>
+          <p>This dynamic can create long-term stagnation. If organizations only reward people who already fit into established group dynamics, they lose the ability to critically examine their own weaknesses. Innovation, self-correction, and organizational learning become more difficult because alternative perspectives disappear. AI systems trained on decisions from such environments may then automate and scale these same biases.</p>
+          <p>My own experiences in the rescue service illustrate a similar mechanism. At the beginning, I struggled with social expectations and group dynamics. Because I did not automatically understand all informal communication rules, conflicts emerged. However, over time, both sides adapted. I learned how the system functioned, while the team also learned how to work with me. Eventually, my competence and understanding of the work itself became more important than initial social friction.</p>
+          <p>This experience demonstrated an important principle: healthy systems are capable of mutual adaptation. In dysfunctional systems, adaptation is expected only from the newcomer, while the group itself remains rigid. Such rigidity increases the risk of exclusion, groupthink, and institutional blind spots. In the context of AI, this becomes dangerous because automated systems can replicate these rigid patterns on a much larger scale.</p>
+          <p>The chapter also emphasizes the importance of transparency, explainability, and auditing. These mechanisms are necessary because AI systems should not be treated as unquestionable authorities. Users and institutions must understand how decisions are made, what data is being used, and what limitations the system has. Otherwise, people may blindly trust algorithmic outputs even when the system operates outside its intended context or produces unfair outcomes.</p>
+          <p>Data literacy is therefore essential not only for developers but also for citizens, managers, and decision-makers. People must be able to critically evaluate how AI systems function and what social consequences they may create. Fairness cannot be fully reduced to mathematical formulas because fairness itself is socially and politically contested. Human judgment, oversight, and accountability remain necessary.</p>
+          <p>In conclusion, AI discrimination is not only a technical issue but also a societal and organizational one. AI systems inherit the assumptions, priorities, and biases of the institutions that create them. Preventing discrimination therefore requires more than better algorithms. It requires transparent development processes, diverse perspectives, critical oversight, and organizations that value competence and adaptability over rigid conformity.</p>
+        </div>
+      </div>
+      <div class="essay-footer">
+        <span>Una Europa MOOC "AI in Society" · Module: AI and Discrimination</span>
+        <span>27 May 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- EN 03: AI Implants -->
+  <div class="essay-card">
+    <div class="essay-header" onclick="toggleEssay(this)">
+      <span class="essay-num">03</span>
+      <div class="essay-meta">
+        <div class="essay-title">AI Implants in the Human Body — High or Unacceptable Risk?</div>
+        <div class="essay-info">
+          <span class="essay-date">30 May 2026</span>
+          <span class="essay-tag tag-law">Human Rights</span>
+          <span class="essay-tag tag-ethics">Ethics</span>
+          <span class="essay-tag tag-tech">Autonomous Systems</span>
+          <span class="essay-tag tag-en">EN</span>
+        </div>
+      </div>
+      <span class="essay-chevron">▾</span>
+    </div>
+    <div class="essay-body">
+      <div class="essay-content">
+        <div class="essay-section">
+          <p>The question of whether an AI implant in a human body poses a high or unacceptable risk cannot be answered uniformly. The answer depends fundamentally on the purpose and design of the implant in question.</p>
+          <p>There are legitimate use cases where AI implants provide clear benefits. AI-powered prosthetics already exist and have transformed the lives of people with physical disabilities, restoring mobility and independence in ways previously considered impossible. In therapeutic contexts, implants that regulate neurological conditions such as Parkinson's disease or severe depression could offer relief where conventional treatments have failed. These applications share a common feature: they restore or support existing human functions without fundamentally altering who the person is.</p>
+          <p>The situation changes dramatically when an AI implant is designed to analyse emotions, influence decisions, and shape behaviour. This is precisely the scenario illustrated by Clara in "The Best Option", a short film which was unfortunately no longer accessible at the time of writing. Based on the written description provided, Clara was introduced as a tool to help Mina make better decisions. Yet the result was a gradual transformation of her personality and relationships. Crucially, this happened not through malfunction or external attack, but through normal operation. The system worked exactly as intended and that is the problem.</p>
+          <p>A technology that subtly reshapes a person's identity without their full awareness represents a direct threat to human dignity as protected under Article 1 of the EU Charter of Fundamental Rights.</p>
+          <p>Beyond the question of normal operation, AI implants connected to external networks introduce a further dimension of risk: the possibility of hacking. A compromised implant could manipulate a person's emotions or motor functions against their will, potentially forcing them to act in ways they would never choose, possibly with full awareness but without control over their own body. This scenario constitutes not only a violation of Articles 1 and 3 of the EU Charter, covering human dignity and physical integrity, but also a direct threat to public safety.</p>
+          <p>A useful parallel is the algorithmic filter bubble. Social media algorithms already shape worldviews and behaviour in ways users are often unaware of. But a person can delete their account, block content, and step away. With a brain implant, there is no equivalent exit. The irreversibility fundamentally changes the ethical stakes.</p>
+          <p>Under the EU AI Act, systems that manipulate human behaviour in ways that circumvent free will are classified as posing an unacceptable risk and are prohibited. An AI implant designed to analyse emotions and influence decisions falls squarely within this category. Therapeutic implants with clearly defined medical purposes and strict oversight could potentially be classified as high risk rather than unacceptable, provided robust safeguards are in place.</p>
+          <p>In conclusion, AI implants are not inherently unacceptable, but any system that risks altering who a person fundamentally is, or that could be weaponised against the person carrying it, crosses a line that regulation must hold firm.</p>
+        </div>
+      </div>
+      <div class="essay-footer">
+        <span>Una Europa MOOC "AI in Society" · Chapter 6.1 · AI and Human Rights</span>
+        <span>30 May 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- EN 04: Facial Recognition -->
+  <div class="essay-card">
+    <div class="essay-header" onclick="toggleEssay(this)">
+      <span class="essay-num">04</span>
+      <div class="essay-meta">
+        <div class="essay-title">Facial Recognition & the 2024 Paris Olympics</div>
+        <div class="essay-info">
+          <span class="essay-date">29 May 2026</span>
+          <span class="essay-tag tag-law">Law</span>
+          <span class="essay-tag tag-tech">Biometrics</span>
+          <span class="essay-tag tag-ethics">Ethics</span>
+          <span class="essay-tag tag-en">EN</span>
+        </div>
+      </div>
+      <span class="essay-chevron">▾</span>
+    </div>
+    <div class="essay-body">
+      <div class="essay-content">
+        <div class="essay-section">
+          <h3>What is Facial Recognition?</h3>
+          <p>Facial recognition is a biometric technology that enables computers to identify or verify individuals by analysing their facial features, either from static images or video streams. It serves two distinct purposes: authentication, meaning the verification of a known identity such as unlocking a smartphone, and identification, meaning the recognition of an individual within a larger group or database.</p>
+        </div>
+        <div class="essay-section">
+          <h3>Risks and Concerns</h3>
+          <p>Despite its widespread adoption, facial recognition is considered the least accurate of all biometric methods. A 2016 OECD study highlighted significant risks of misuse, including the surveillance of political activists, misidentification of individuals, and the targeting of ethnic minorities. Major technology companies including IBM, Amazon and Microsoft reduced or halted sales of facial recognition products in response to growing ethical concerns. Amnesty International has raised serious objections, pointing out that training datasets are insufficiently diverse, making systems significantly less accurate for people with darker skin, women, and minorities, increasing the risk of wrongful identification and arrest.</p>
+        </div>
+        <div class="essay-section">
+          <h3>Legal Framework</h3>
+          <p>From a legal perspective, Article 9 of the GDPR classifies biometric data as sensitive personal data requiring enhanced protection. The Council of Europe has further established that such technology must not impair human dignity or fundamental freedoms. The EU AI Act goes further still: under Article 5(1)(h), real-time remote biometric identification in publicly accessible spaces is classified as a prohibited practice, with only narrow exceptions for terrorism prevention or the search for suspects of serious crimes, and only under strict procedural conditions including prior judicial authorisation and a fundamental rights impact assessment.</p>
+        </div>
+        <div class="essay-section">
+          <h3>Nice 2020: A Precedent</h3>
+          <p>The 2020 Nice Carnival test illustrated exactly why such regulation became necessary. The CNIL criticised the legal basis of the experiment, concluding that existing frameworks were insufficient and that a clearer legal framework was urgently needed, a gap the AI Act has since partially addressed.</p>
+        </div>
+        <div class="essay-section">
+          <h3>Paris 2024: Where the Line Was Drawn</h3>
+          <p>By the time of the 2024 Paris Olympics, France had drawn a deliberate line. Facial recognition was explicitly prohibited. Instead, authorities deployed algorithmic video surveillance capable of detecting situations rather than individuals, abandoned objects, crowd movements, weapons, and unusual behaviour, with a human operator retaining full decision-making authority.</p>
+        </div>
+        <div class="essay-section">
+          <h3>The Hidden Discrimination</h3>
+          <p>However, this distinction is less clear-cut than it appears. The system was trained to detect abnormal behaviour, and normality is not an objective category. It reflects the behavioural patterns of whoever generated the training data. A person who talks to themselves, moves differently, or behaves in ways that deviate from majority norms may be flagged as suspicious, not because they pose a threat, but because they fall outside a statistically defined standard. This creates algorithmic discrimination that requires no malicious intent. Neurodivergent individuals, people from different cultural backgrounds, or those experiencing visible distress are systematically more likely to be flagged and controlled. Over time, this feeds back into training data, reinforcing bias at scale.</p>
+        </div>
+        <div class="essay-section">
+          <h3>The Panopticon Effect</h3>
+          <p>This mechanism extends beyond state surveillance. Social media has created a parallel dynamic. The ubiquity of smartphone cameras means people are increasingly aware that any moment could be recorded and shared, fundamentally altering behaviour. Authentic self-expression is suppressed not by explicit prohibition but by the knowledge of potential exposure, what Michel Foucault described as the panopticon effect: the mere possibility of being watched is sufficient to produce conformity. Both the Paris surveillance system and social media operate on the same principle: they define normality and create pressure to conform. Those who fall outside the norm face disproportionate consequences, and in both cases the discrimination is structural rather than intentional.</p>
+        </div>
+        <div class="essay-section">
+          <h3>Conclusion</h3>
+          <p>The Paris 2024 Olympics demonstrated that AI-assisted surveillance is possible without facial recognition. However, the absence of facial recognition does not guarantee the absence of discrimination. As long as surveillance systems use behavioural norms as their standard, they will systematically disadvantage those who fall outside them. Effective regulation must therefore address not only how people are identified, but how they are observed and judged.</p>
+        </div>
+      </div>
+      <div class="essay-footer">
+        <span>Una Europa MOOC "AI in Society" · Chapter 5.2 · Personal Research</span>
+        <span>29 May 2026</span>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>Lisa Nagel · Projekte & Essays · Stand Mai 2026</footer>
+
+<script>
+function toggleEssay(header) {
+  header.parentElement.classList.toggle('open');
+}
+</script>
+
+</body>
+</html>
