@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lisa Nagel – Portfolio</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0d0d0d;
+    --paper: #f5f0e8;
+    --accent: #c9a227;
+    --accent2: #2a5f8f;
+    --muted: #6b6459;
+    --line: #d4cec4;
+    --card: #faf7f2;
+    --green: #2a7a4a;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'DM Mono', monospace;
+    min-height: 100vh;
+  }
+
+  .main-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    border-bottom: 2px solid var(--ink);
+    background: var(--card);
+    justify-content: center;
+  }
+  .main-nav a {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--muted);
+    padding: 1rem 1.4rem;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .main-nav a:hover { color: var(--ink); border-bottom-color: var(--accent); }
+  .main-nav a.active { color: var(--ink); border-bottom-color: var(--accent); }
+
+  /* ── HERO ── */
+  header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 3rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.12;
+  }
+  header::after {
+    content: 'LN';
+    position: absolute;
+    right: -0.02em;
+    bottom: -0.2em;
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(8rem, 20vw, 16rem);
+    font-weight: 700;
+    color: transparent;
+    -webkit-text-stroke: 1px #1e1e1e;
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .hero-inner {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    position: relative;
+    z-index: 1;
+    flex-wrap: wrap;
+  }
+
+  .hero-photo {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center top;
+    border: 3px solid var(--accent);
+    flex-shrink: 0;
+  }
+
+  .hero-text { flex: 1; min-width: 200px; }
+
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-weight: 500;
+    font-size: clamp(2rem, 5vw, 4rem);
+    line-height: 1.1;
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  header h1 em { color: var(--accent); font-style: italic; }
+  header h1 .welcome-text {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: 0.35em;
+    font-weight: 300;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    text-transform: none;
+  }
+
+  .hero-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    font-size: 0.65rem;
+    color: #666;
+    font-family: 'Syne', sans-serif;
+    letter-spacing: 0.08em;
+  }
+  .status-dot {
+    width: 7px; height: 7px;
+    background: #4ade80;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  /* ── MAIN ── */
+  main { max-width: 900px; margin: 0 auto; padding: 2.5rem 2rem; }
+
+  .section-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.2rem;
+    margin-top: 2.5rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .section-label:first-child { margin-top: 0; }
+
+  /* ── PROFIL ── */
+  .profil-accordion {
+    border: 1.5px solid var(--line);
+    background: var(--card);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+  .profil-toggle {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.1rem 1.4rem;
+    background: var(--ink);
+    color: var(--paper);
+    cursor: pointer;
+    user-select: none;
+  }
+  .profil-toggle .pt-icon { font-size: 1.3rem; flex-shrink: 0; }
+  .profil-toggle .pt-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    flex: 1;
+  }
+  .profil-toggle .pt-sub {
+    font-size: 0.62rem;
+    color: #aaa;
+    margin-top: 0.1rem;
+    letter-spacing: 0.05em;
+  }
+  .profil-toggle .chevron {
+    font-size: 0.9rem;
+    color: #888;
+    transition: transform 0.25s;
+  }
+  .profil-accordion.open .chevron { transform: rotate(180deg); }
+
+  .profil-body {
+    display: none;
+    padding: 1.4rem;
+    border-top: 1.5px solid var(--line);
+  }
+  .profil-accordion.open .profil-body { display: block; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  .profil-body p {
+    font-size: 0.78rem;
+    line-height: 1.85;
+    color: #2a2520;
+    margin-bottom: 1rem;
+  }
+  .profil-body p:last-child { margin-bottom: 0; }
+  .profil-body p em { color: var(--accent); font-style: italic; }
+  .profil-body p strong { color: var(--ink); font-weight: 500; }
+  .profil-body h5 {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 1rem 0 0.4rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .profil-body h5:first-child { margin-top: 0; }
+
+  /* ── STATS ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1.5px solid var(--line);
+    margin-bottom: 1.5rem;
+  }
+  .stat-box {
+    background: var(--card);
+    padding: 1.2rem 1rem;
+  }
+  .stat-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.2rem;
+    font-style: italic;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .stat-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 0.25rem;
+    line-height: 1.4;
+  }
+
+  /* ── PORTFOLIO ── */
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1.5px solid var(--line);
+  }
+  .p-card {
+    background: var(--card);
+    padding: 1.5rem;
+    text-decoration: none;
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 180px;
+    transition: background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .p-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transition: transform 0.25s;
+    transform-origin: left;
+  }
+  .p-card:hover::before { transform: scaleX(1); }
+  .p-card:hover { background: #f0ebe0; }
+  .p-card.coming { opacity: 0.4; pointer-events: none; }
+
+  .p-card-num {
+    font-size: 0.58rem;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    font-family: 'Syne', sans-serif;
+    margin-bottom: 0.8rem;
+  }
+  .p-card-icon { font-size: 1.5rem; margin-bottom: 0.6rem; display: block; }
+  .p-card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    line-height: 1.25;
+    margin-bottom: 0.4rem;
+  }
+  .p-card-desc {
+    font-size: 0.68rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .p-card-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+  }
+  .p-card-tag {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--line);
+    padding: 0.15rem 0.45rem;
+    border-radius: 2px;
+  }
+  .p-card-arrow { font-size: 0.9rem; color: var(--muted); }
+  .p-card:hover .p-card-arrow { color: var(--accent); }
+
+  /* ── TIMELINE ── */
+  .timeline {
+    position: relative;
+    padding-left: 1.5rem;
+    border-left: 2px solid var(--line);
+  }
+  .tl-item {
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -1.6rem;
+    top: 0.35rem;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--paper);
+  }
+  .tl-date {
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    font-family: 'Syne', sans-serif;
+    text-transform: uppercase;
+    margin-bottom: 0.2rem;
+  }
+  .tl-role {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1rem;
+    margin-bottom: 0.15rem;
+  }
+  .tl-company {
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-bottom: 0.3rem;
+  }
+  .tl-desc {
+    font-size: 0.7rem;
+    color: #4a4540;
+    line-height: 1.6;
+  }
+
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.62rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    border-top: 1px solid var(--line);
+    margin-top: 2rem;
+  }
+
+  @media (max-width: 600px) {
+    header { padding: 2rem 1.5rem; }
+    main { padding: 1.5rem 1rem; }
+    .portfolio-grid { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .hero-photo { width: 90px; height: 90px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="main-nav">
+  <a href="index.html" class="active">Über mich</a>
+  <a href="skills.html">Wissen & Kompetenzen</a>
+  <a href="certifikates.html">Zertifikate</a>
+  <a href="projects.html">Projekte & Essays</a>
+  <a href="contact.html">Kontakt</a>
+</nav>
+
+<header>
+  <div class="hero-inner">
+    <svg class="hero-photo" viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="65" cy="65" r="65" fill="#1a1a1a"/>
+      <!-- Katzensilhouette -->
+      <g fill="#c9a227">
+        <!-- Körper -->
+        <ellipse cx="65" cy="85" rx="28" ry="22"/>
+        <!-- Kopf -->
+        <circle cx="65" cy="58" r="18"/>
+        <!-- Ohren -->
+        <polygon points="50,44 44,28 58,40"/>
+        <polygon points="80,44 86,28 72,40"/>
+        <!-- Ohren innen -->
+        <polygon points="50,42 46,31 57,40" fill="#0d0d0d" opacity="0.5"/>
+        <polygon points="80,42 84,31 73,40" fill="#0d0d0d" opacity="0.5"/>
+        <!-- Augen -->
+        <ellipse cx="58" cy="57" rx="4" ry="5" fill="#0d0d0d"/>
+        <ellipse cx="72" cy="57" rx="4" ry="5" fill="#0d0d0d"/>
+        <circle cx="57" cy="56" r="1.2" fill="#f5f0e8"/>
+        <circle cx="71" cy="56" r="1.2" fill="#f5f0e8"/>
+        <!-- Nase -->
+        <polygon points="65,63 62,66 68,66" fill="#0d0d0d"/>
+        <!-- Schnurrhaare -->
+        <line x1="47" y1="64" x2="61" y2="66" stroke="#0d0d0d" stroke-width="1" opacity="0.6"/>
+        <line x1="47" y1="67" x2="61" y2="67" stroke="#0d0d0d" stroke-width="1" opacity="0.6"/>
+        <line x1="69" y1="66" x2="83" y2="64" stroke="#0d0d0d" stroke-width="1" opacity="0.6"/>
+        <line x1="69" y1="67" x2="83" y2="67" stroke="#0d0d0d" stroke-width="1" opacity="0.6"/>
+        <!-- Schwanz -->
+        <path d="M93,95 Q110,80 105,65 Q102,58 97,68 Q94,78 88,88" fill="#c9a227" stroke="none"/>
+      </g>
+    </svg>
+    <div class="hero-text">
+      <h1>Lisa <em>Nagel</em> <span class="welcome-text">Herzlich willkommen</span></h1>
+      <div class="hero-status">
+        <span class="status-dot"></span>
+        Offen für neue Stellen · Schweiz · Remote · Europa
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <div class="section-label">Profil</div>
+
+  <div class="profil-accordion open">
+    <div class="profil-toggle" onclick="this.parentElement.classList.toggle('open')">
+      <span class="pt-icon">👤</span>
+      <div style="flex:1;">
+        <div class="pt-title">Kurzprofil</div>
+        <div class="pt-sub">Analytisch · Systemisch · Lösungsorientiert</div>
+      </div>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="profil-body">
+      <p>Analytisch denkende Fachkraft mit mehrjähriger Erfahrung in anspruchsvollen Kundensituationen, Administration und strukturierter Dokumentation. Ich arbeite faktenbasiert, behalte auch unter Druck den Überblick und löse Probleme lieber systematisch als reaktiv.</p>
+      <p>Aktuell in gezielter Weiterbildung zur <em>Junior Cybersecurity Analystin</em> via Cisco NetAcad — mit abgeschlossenen Zertifikaten in Networking Basics, Networking Devices, Endpoint Security sowie laufendem Kurs Network Defense. Ergänzt durch universitäre Zertifikate in <em>KI-Ethik</em> (University of Helsinki, 2 ECTS) und dem Una Europa MOOC „AI in Society".</p>
+    </div>
+  </div>
+
+  <div class="profil-accordion">
+    <div class="profil-toggle" onclick="this.parentElement.classList.toggle('open')">
+      <span class="pt-icon">🧠</span>
+      <div style="flex:1;">
+        <div class="pt-title">Erweitertes Kompetenzprofil</div>
+        <div class="pt-sub">Systemisches Denken · Analytische Stärken</div>
+      </div>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="profil-body">
+      <h5>Analytisches und systemorientiertes Denken</h5>
+      <p>Ich arbeite mit einer analytischen und systemorientierten Denkweise und interessiere mich besonders für die Strukturen und Wechselwirkungen sozialer, kognitiver und technischer Systeme. Dabei analysiere ich, wie Entscheidungen entstehen, welche Faktoren menschliches Verhalten beeinflussen und wie sich wiederkehrende Muster auf Gruppen, Prozesse und digitale Systeme auswirken.</p>
+      <h5>Mensch, KI und digitale Systeme</h5>
+      <p>Ein besonderer Schwerpunkt meines Interesses liegt an der Schnittstelle zwischen menschlichem Verhalten und künstlicher Intelligenz. Dabei befasse ich mich mit der Frage, wie Menschen und intelligente Systeme miteinander interagieren, wie Entscheidungen durch algorithmische Prozesse unterstützt werden und welche Auswirkungen dies auf Wahrnehmung, Kommunikation und Verhalten haben kann.</p>
+      <p>Mein Interesse umfasst sowohl die technische Logik solcher Systeme als auch deren praktische Anwendung in realen Umgebungen.</p>
+      <h5>Von der Analyse zur Lösung</h5>
+      <p>Ich betrachte komplexe Fragestellungen nicht isoliert, sondern im Zusammenhang ihrer einzelnen Bestandteile. Dabei analysiere ich Strukturen, erkenne wiederkehrende Muster und leite daraus nachvollziehbare Lösungsansätze, Konzepte oder Prozessverbesserungen ab.</p>
+      <p>Mein Fokus liegt darauf, komplexe Zusammenhänge verständlich zu machen und in praktikable Modelle oder Handlungsansätze zu überführen.</p>
+      <h5>Strukturierte Arbeitsweise</h5>
+      <p>In meiner Arbeitsweise unterscheide ich bewusst zwischen Beobachtung, Interpretation und Schlussfolgerung. Dadurch kann ich technische, organisatorische und soziale Fragestellungen strukturiert analysieren und unterschiedliche Einflussfaktoren getrennt bewerten.</p>
+      <p>Diese Herangehensweise unterstützt mich dabei, Probleme systematisch zu erfassen und Lösungen nachvollziehbar zu entwickeln.</p>
+    </div>
+  </div>
+
+  <div class="section-label">Auf einen Blick</div>
+  <div class="stats-grid">
+    <div class="stat-box">
+      <div class="stat-num">10+</div>
+      <div class="stat-label">Jahre Berufs&shy;erfahrung</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">6</div>
+      <div class="stat-label">Cisco Zertifikate (inkl. laufend)</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">4</div>
+      <div class="stat-label">KI-Ethik Zertifikate</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">9</div>
+      <div class="stat-label">Fach&shy;bereiche</div>
+    </div>
+  </div>
+
+  <div class="section-label">Portfolio</div>
+  <div class="portfolio-grid">
+    <a class="p-card" href="skills.html">
+      <div>
+        <div class="p-card-num">01 / Kompetenzen</div>
+        <span class="p-card-icon">🗂️</span>
+        <div class="p-card-title">Wissen & Kompetenzen</div>
+        <div class="p-card-desc">9 Fachbereiche mit Unterdisziplinen, 14 Bücher mit rekonstruierter Wissensstruktur.</div>
+      </div>
+      <div class="p-card-bottom">
+        <span class="p-card-tag">Interaktiv</span>
+        <span class="p-card-arrow">↗</span>
+      </div>
+    </a>
+    <a class="p-card" href="certifikates.html">
+      <div>
+        <div class="p-card-num">02 / Nachweise</div>
+        <span class="p-card-icon">📜</span>
+        <div class="p-card-title">Zertifikate & Diplome</div>
+        <div class="p-card-desc">Cisco NetAcad · Ethics of AI · SAFS · Groupe Mutuel · Rettungssanitäterin.</div>
+      </div>
+      <div class="p-card-bottom">
+        <span class="p-card-tag">Verifizierbar</span>
+        <span class="p-card-arrow">↗</span>
+      </div>
+    </a>
+    <a class="p-card" href="projects.html">
+      <div>
+        <div class="p-card-num">03 / Essays</div>
+        <span class="p-card-icon">✍️</span>
+        <div class="p-card-title">Projekte & Essays</div>
+        <div class="p-card-desc">4 Essays zu KI-Ethik, Diskriminierung, Menschenrechten & Überwachung. DE + EN.</div>
+      </div>
+      <div class="p-card-bottom">
+        <span class="p-card-tag">DE · EN</span>
+        <span class="p-card-arrow">↗</span>
+      </div>
+    </a>
+    <a class="p-card coming" href="#">
+      <div>
+        <div class="p-card-num">04 / Code</div>
+        <span class="p-card-icon">🐍</span>
+        <div class="p-card-title">Python & Netzwerk-Projekte</div>
+        <div class="p-card-desc">Cisco-Configs, Python-Skripte und SQL-Projekte aus der laufenden Ausbildung.</div>
+      </div>
+      <div class="p-card-bottom">
+        <span class="p-card-tag">In Arbeit</span>
+        <span class="p-card-arrow">–</span>
+      </div>
+    </a>
+  </div>
+
+  <div class="section-label">Werdegang</div>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-date">Aug 2025 – heute</div>
+      <div class="tl-role">Junior Cybersecurity Analyst (in Ausbildung)</div>
+      <div class="tl-company">Cisco Networking Academy</div>
+      <div class="tl-desc">Endpoint Security ✓ · Networking Basics ✓ · Network Defense laufend</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Mai 2026</div>
+      <div class="tl-role">KI-Ethik & AI in Society</div>
+      <div class="tl-company">University of Helsinki · Una Europa · Edinburgh · Sorbonne</div>
+      <div class="tl-desc">Ethics of AI · AI in Society</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Dez 2023 – Jun 2025</div>
+      <div class="tl-role">Fitnessinstruktorin</div>
+      <div class="tl-company">Movemi AG – Activ Fitness</div>
+      <div class="tl-desc">Trainingsplanung · Kassenführung · Onboarding · Studioorganisation</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Okt 2022 – Okt 2023</div>
+      <div class="tl-role">Mitarbeiterin</div>
+      <div class="tl-company">Puregym AG</div>
+      <div class="tl-desc">Betriebsverantwortung · ServiceNow · TBC · Sicherheitsstandards ASAkompakt</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Dez 2022 – Jul 2023</div>
+      <div class="tl-role">Diplom Fitnesstrainer / Kundenberater</div>
+      <div class="tl-company">SAFS – Swiss Academy of Fitness and Sports</div>
+      <div class="tl-desc">QUALITOP-anerkannt · Anatomie · Physiologie · Trainingslehre</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Mai 2020 – Dez 2020</div>
+      <div class="tl-role">Versicherungsberaterin (Aussendienst)</div>
+      <div class="tl-company">Swiss Finanz Beratung AG</div>
+      <div class="tl-desc">KVG · Kundenakquise · Bedarfsanalyse · Angebotsausarbeitung</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Nov 2015 – Jul 2018</div>
+      <div class="tl-role">Rettungssanitäterin</div>
+      <div class="tl-company">DRK Schwäbisch Hall / Aalen</div>
+      <div class="tl-desc">Staatlich anerkannt · Notfall- & Krankentransport · NADOC-Protokoll</div>
+    </div>
+  </div>
+
+</main>
+
+<footer>Lisa Nagel · Portfolio · Stand Mai 2026</footer>
+
+</body>
+</html>
